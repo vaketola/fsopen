@@ -13,22 +13,29 @@ const Button = ({ value, setter, name }) => {
 
 const StatisticLine = ({ name, value, unit }) => {
   return (
-    <div>
-      {name} {value} {unit}
-    </div>
+    <tr>
+      <td>
+        {name} 
+      </td>
+      <td>
+        {value} {unit}
+      </td>
+    </tr>
   )
 }
 
 const Statistics = ({ good, neutral, bad }) => {
   return (
-    <div>
+    <table>
+      <tbody>
         <StatisticLine name="good"     value={good} />
         <StatisticLine name="neutral"  value={neutral} />
         <StatisticLine name="bad"      value={bad} />
         <StatisticLine name="all"      value={good+neutral+bad} />
         <StatisticLine name="average"  value={(good-bad)/(good+neutral+bad)} />
         <StatisticLine name="positive" value={100*good/(good+neutral+bad)} unit="%"/>
-    </div>
+      </tbody>
+    </table>
   )
 }
 
@@ -40,7 +47,7 @@ const App = () => {
 
   if (good+neutral+bad > 0) {
     return (
-      <div>
+      <>
         <h1>
           give feedback
         </h1>
@@ -51,11 +58,11 @@ const App = () => {
           statistics
         </h1>
         <Statistics good={good} neutral={neutral} bad={bad} />
-      </div>
+      </>
     )
   }
   return (
-    <div>
+    <>
       <h1>
         give feedback
       </h1>
@@ -65,8 +72,10 @@ const App = () => {
       <h1>
         statistics
       </h1>
-      <StatisticLine name="No feedback given" />
-    </div>
+      <div>
+        No feedback given
+      </div>
+    </>
   )
 }
 
