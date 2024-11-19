@@ -11,10 +11,10 @@ const FeedbackButton = ({ value, setter, name }) => {
   )
 }
 
-const Statistics = ({ name, value }) => {
+const Statistics = ({ name, value, unit }) => {
   return (
     <div>
-      {name} {value}
+      {name} {value} {unit}
     </div>
   )
 }
@@ -36,9 +36,12 @@ const App = () => {
       <h1>
         statistics
       </h1>
-      <Statistics name="good"    value={good} />
-      <Statistics name="neutral" value={neutral} />
-      <Statistics name="bad"     value={bad} />
+      <Statistics name="good"     value={good} />
+      <Statistics name="neutral"  value={neutral} />
+      <Statistics name="bad"      value={bad} />
+      <Statistics name="all"      value={good+neutral+bad} />
+      <Statistics name="average"  value={(good-bad)/(good+neutral+bad)} />
+      <Statistics name="positive" value={100*good/(good+neutral+bad)} unit="%"/>
     </div>
   )
 }
