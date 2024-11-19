@@ -1,7 +1,7 @@
 import { useState } from 'react'
 
 
-const FeedbackButton = ({ value, setter, name }) => {
+const Button = ({ value, setter, name }) => {
   return (
     <>
       <button onClick={() => setter(value + 1)}>
@@ -11,10 +11,23 @@ const FeedbackButton = ({ value, setter, name }) => {
   )
 }
 
-const Statistics = ({ name, value, unit }) => {
+const StatisticLine = ({ name, value, unit }) => {
   return (
     <div>
       {name} {value} {unit}
+    </div>
+  )
+}
+
+const Statistics = ({ good, neutral, bad }) => {
+  return (
+    <div>
+        <StatisticLine name="good"     value={good} />
+        <StatisticLine name="neutral"  value={neutral} />
+        <StatisticLine name="bad"      value={bad} />
+        <StatisticLine name="all"      value={good+neutral+bad} />
+        <StatisticLine name="average"  value={(good-bad)/(good+neutral+bad)} />
+        <StatisticLine name="positive" value={100*good/(good+neutral+bad)} unit="%"/>
     </div>
   )
 }
@@ -31,18 +44,13 @@ const App = () => {
         <h1>
           give feedback
         </h1>
-        <FeedbackButton value={good}    setter={setGood}    name="good" />
-        <FeedbackButton value={neutral} setter={setNeutral} name="neutral" />
-        <FeedbackButton value={bad}     setter={setBad}     name="bad" />
+        <Button value={good}    setter={setGood}    name="good" />
+        <Button value={neutral} setter={setNeutral} name="neutral" />
+        <Button value={bad}     setter={setBad}     name="bad" />
         <h1>
           statistics
         </h1>
-        <Statistics name="good"     value={good} />
-        <Statistics name="neutral"  value={neutral} />
-        <Statistics name="bad"      value={bad} />
-        <Statistics name="all"      value={good+neutral+bad} />
-        <Statistics name="average"  value={(good-bad)/(good+neutral+bad)} />
-        <Statistics name="positive" value={100*good/(good+neutral+bad)} unit="%"/>
+        <Statistics good={good} neutral={neutral} bad={bad} />
       </div>
     )
   }
@@ -51,13 +59,13 @@ const App = () => {
       <h1>
         give feedback
       </h1>
-      <FeedbackButton value={good}    setter={setGood}    name="good" />
-      <FeedbackButton value={neutral} setter={setNeutral} name="neutral" />
-      <FeedbackButton value={bad}     setter={setBad}     name="bad" />
+      <Button value={good}    setter={setGood}    name="good" />
+      <Button value={neutral} setter={setNeutral} name="neutral" />
+      <Button value={bad}     setter={setBad}     name="bad" />
       <h1>
         statistics
       </h1>
-      <Statistics name="No feedback given" />
+      <StatisticLine name="No feedback given" />
     </div>
   )
 }
