@@ -24,9 +24,15 @@ const App = () => {
   ]
   const [selected, setSelected] = useState(0)
   const [votes,    setVotes]    = useState(new Array(anecdotes.length).fill(0))
+  
+  const mostVotes = Math.max(...votes)
+  //console.log(mostVotes)
 
   return (
     <div>
+      <h1>
+        Anecdote of the day
+      </h1>
       <p>
         {anecdotes[selected]}
       </p>
@@ -39,6 +45,15 @@ const App = () => {
       <button onClick={() => ClickHandler(anecdotes.length, setSelected, setVotes)}> 
         next anecdote
       </button>
+      <h1>
+        Anecdote with most votes
+      </h1>
+      <p>
+        {anecdotes[votes.indexOf(mostVotes)]}
+      </p>
+      <p>
+        has {mostVotes} votes
+      </p>
     </div>
   )
 }
