@@ -15,6 +15,16 @@ const handleDelete = (person, persons, setPersons) => {
   }
 }
 
+const updateNumber = (persons, oldPerson, newNumber) => {
+  const newPersons = persons.map(person => {
+    if (person.id === oldPerson.id) {
+      return { ...person, number:newNumber }
+    }
+    return person
+  })
+  return newPersons
+}
+
 const NameEntry = ({ person, persons, filter, setPersons }) => {
   if (person.name.toLowerCase().includes(filter.toLowerCase())) {
     return (
@@ -52,12 +62,20 @@ const App = () => {
 
   const addName = (event) => {
     event.preventDefault()
-    const alreadyIn = persons.some(person => person.name === newName)
-    if (alreadyIn) {
-      alert(`${newName} is already added to phonebook`)
+    const match = persons.find(person => person.name === newName)
+    if (match) {
+      if (confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
+        const newPerson = {name:newName, number:newNumber}
+        personService.update(match.id, newPerson)
+                     .then(() => {
+                      setPersons(updateNumber(persons, match, newNumber))
+                      setNewName('')
+                      setNewNumber('')
+                     })
+      }
+      
     } else {
       const newPerson = {name:newName, number:newNumber}
-
       personService.create(newPerson)
                    .then(response => {
                     setPersons(persons.concat(response.data))
