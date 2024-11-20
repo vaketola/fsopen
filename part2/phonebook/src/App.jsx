@@ -5,18 +5,33 @@ const Header = ({ text }) => {
   return <h2>{text}</h2>
 }
 
-const NameEntry = ({ name, number, filter }) => {
-  if (name.toLowerCase().includes(filter.toLowerCase())) {
-    return <div>{name} {number}</div>
+const handleDelete = (person, persons, setPersons) => {
+  if (confirm(`Delete ${person.name}?`)) {
+    personService.remove(person.id)
+                 .then(response => {
+                  const newPersons = persons.filter(p => p.id !== response.data.id)
+                  setPersons(newPersons)
+                })
   }
 }
 
-const Persons = ({ persons, newFilter }) => {
+const NameEntry = ({ person, persons, filter, setPersons }) => {
+  if (person.name.toLowerCase().includes(filter.toLowerCase())) {
+    return (
+      <div>
+        {person.name} {person.number} <button onClick={() => handleDelete(person, persons, setPersons)}>delete</button>
+      </div>
+    ) 
+  }
+}
+
+const Persons = ({ persons, newFilter, setPersons }) => {
   return (
-    persons.map((person, id) => <NameEntry key={id} 
-                                           name={person.name} 
-                                           number={person.number} 
-                                           filter={newFilter}/>)
+    persons.map(person => <NameEntry key={person.id} 
+                                     person={person} 
+                                     persons={persons}
+                                     filter={newFilter}
+                                     setPersons={setPersons}/>)
   )
 }
 
@@ -25,7 +40,7 @@ const FormField = ({ text, value, handler }) => {
 }
 
 const App = () => {
-  const [persons, setPersons] = useState([]) 
+  const [persons,   setPersons]   = useState([]) 
   const [newFilter, setNewFilter] = useState('')
   const [newName,   setNewName]   = useState('')
   const [newNumber, setNewNumber] = useState('')
@@ -64,10 +79,10 @@ const App = () => {
       <form onSubmit={addName}>
         <FormField text='name:'   value={newName}   handler={handleNewName}/>
         <FormField text='number:' value={newNumber} handler={handleNewNumber}/>
-        <button type="submit">add</button>
+        <button type='submit'>add</button>
       </form>
       <Header text='Numbers' />
-      <Persons persons={persons} newFilter={newFilter} />
+      <Persons persons={persons} newFilter={newFilter} setPersons={setPersons} />
     </div>
   )
 }
