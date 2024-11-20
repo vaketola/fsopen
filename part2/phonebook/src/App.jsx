@@ -14,18 +14,34 @@ const Notification = ({ message }) => {
   )
 }
 
+const ErrorNotification = ({ message }) => {
+  if (message === null) {
+    return null
+  }
+
+  return (
+    <div className='error'>
+      {message}
+    </div>
+  )
+}
+
 const Header = ({ text }) => {
   return <h2>{text}</h2>
 }
 
-const handleDelete = (person, persons, setPersons, setSuccessMessage) => {
+const handleDelete = (person, persons, setPersons, setSuccessMessage, setErrorMessage) => {
   if (confirm(`Delete ${person.name}?`)) {
     personService.remove(person.id)
                  .then(response => {
                   const newPersons = persons.filter(p => p.id !== response.data.id)
                   setPersons(newPersons)
                   setSuccessMessage(`Removed ${person.name}`)
-                  setTimeout(() => {setSuccessMessage(null)}, 2000)
+                  setTimeout(() => {setSuccessMessage(null)}, 3000)
+                })
+                .catch(error => {
+                  setErrorMessage(`Information of ${person.name} has already been removed from server`)
+                  setTimeout(() => {setErrorMessage(null)}, 3000)
                 })
   }
 }
@@ -40,24 +56,25 @@ const updateNumber = (persons, oldPerson, newNumber) => {
   return newPersons
 }
 
-const NameEntry = ({ person, persons, filter, setPersons, setSuccessMessage }) => {
+const NameEntry = ({ person, persons, filter, setPersons, setSuccessMessage, setErrorMessage }) => {
   if (person.name.toLowerCase().includes(filter.toLowerCase())) {
     return (
       <div>
-        {person.name} {person.number} <button onClick={() => handleDelete(person, persons, setPersons, setSuccessMessage)}>delete</button>
+        {person.name} {person.number} <button onClick={() => handleDelete(person, persons, setPersons, setSuccessMessage, setErrorMessage)}>delete</button>
       </div>
     ) 
   }
 }
 
-const Persons = ({ persons, newFilter, setPersons, setSuccessMessage }) => {
+const Persons = ({ persons, newFilter, setPersons, setSuccessMessage, setErrorMessage }) => {
   return (
     persons.map(person => <NameEntry key={person.id} 
                                      person={person} 
                                      persons={persons}
                                      filter={newFilter}
                                      setPersons={setPersons}
-                                     setSuccessMessage={setSuccessMessage}/>)
+                                     setSuccessMessage={setSuccessMessage}
+                                     setErrorMessage={setErrorMessage}/>)
   )
 }
 
@@ -72,6 +89,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
 
   const [successMessage, setSuccessMessage] = useState(null)
+  const [errorMessage,   setErrorMessage]   = useState(null)
 
   useEffect(() => {
     personService.getAll()
@@ -91,7 +109,7 @@ const App = () => {
                       setNewNumber('')
 
                       setSuccessMessage(`Updated ${newName}`)
-                      setTimeout(() => {setSuccessMessage(null)}, 2000)
+                      setTimeout(() => {setSuccessMessage(null)}, 3000)
                      })
       }
       
@@ -104,7 +122,7 @@ const App = () => {
                     setNewNumber('')
 
                     setSuccessMessage(`Added ${newName}`)
-                    setTimeout(() => {setSuccessMessage(null)}, 2000)
+                    setTimeout(() => {setSuccessMessage(null)}, 3000)
                    })
     }
   }
@@ -116,7 +134,8 @@ const App = () => {
   return (
     <div>
       <Header text='Phonebook' />
-      <Notification message={successMessage} />
+      <Notification      message={successMessage} />
+      <ErrorNotification message={errorMessage} />
       <FormField text='filter shown with' value={newFilter} handler={handleNewFilter}/>
       <Header text='add a new' />
       <form onSubmit={addName}>
@@ -125,7 +144,7 @@ const App = () => {
         <button type='submit'>add</button>
       </form>
       <Header text='Numbers' />
-      <Persons persons={persons} newFilter={newFilter} setPersons={setPersons} setSuccessMessage={setSuccessMessage} />
+      <Persons persons={persons} newFilter={newFilter} setPersons={setPersons} setSuccessMessage={setSuccessMessage} setErrorMessage={setErrorMessage}/>
     </div>
   )
 }
