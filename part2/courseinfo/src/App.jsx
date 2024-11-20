@@ -18,19 +18,19 @@ const Part = (props) => {
   )
 }
 
-const Content = (props) => {
+const Content = ({ course }) => {
 
   return (
     <>
-      {props.course.parts.map((part, id)=> <Part key={id} part={part} />)}
+      {course.parts.map((part, id)=> <Part key={id} part={part} />)}
     </>
   )
 }
 
-const Total = (props) => {
+const Total = ({ course }) => {
   return (
     <p>
-      Number of exercises {props.course.parts.reduce((total, part) => total + part.exercises, 0)}
+      Number of exercises {course.parts.reduce((total, part) => total + part.exercises, 0)}
     </p>
   )
 }
