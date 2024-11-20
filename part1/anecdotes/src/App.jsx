@@ -3,8 +3,12 @@ import { useState } from 'react'
 // From the developer.mozilla.org on Math.random()
 const getRandomInt = (max) => Math.floor(Math.random() * max)
 
-const ClickHandler = (length, setSelected) => {
-  setSelected(getRandomInt(length))
+const ClickHandler = (length, setSelected) => setSelected(getRandomInt(length))
+
+const VoteHandler = (votes, setVotes, selected) => {
+  const copy = [...votes]
+  copy[selected] += 1
+  setVotes(copy)
 }
 
 const App = () => {
@@ -19,13 +23,20 @@ const App = () => {
     'The only way to go fast, is to go well.'
   ]
   const [selected, setSelected] = useState(0)
+  const [votes,    setVotes]    = useState(new Array(anecdotes.length).fill(0))
 
   return (
     <div>
       <p>
         {anecdotes[selected]}
       </p>
-      <button onClick={() => ClickHandler(anecdotes.length, setSelected)}> 
+      <p>
+        has {votes[selected]} votes
+      </p>
+      <button onClick={() => VoteHandler(votes, setVotes, selected)}>
+        vote
+      </button>
+      <button onClick={() => ClickHandler(anecdotes.length, setSelected, setVotes)}> 
         next anecdote
       </button>
     </div>
