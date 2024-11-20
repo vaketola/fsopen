@@ -1,5 +1,5 @@
-import { useState } from 'react'
-
+import axios from 'axios'
+import { useState, useEffect } from 'react'
 
 const Header = ({ text }) => {
   return <h2>{text}</h2>
@@ -25,13 +25,16 @@ const FormField = ({ text, value, handler }) => {
 }
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { name: 'Arto Hellas', number: '040-1234567' },
-    { name: 'Ada Lovelace', number: '39-44-5323523' }
-  ]) 
+  const [persons, setPersons] = useState([]) 
   const [newFilter, setNewFilter] = useState('')
   const [newName,   setNewName]   = useState('')
   const [newNumber, setNewNumber] = useState('')
+
+  useEffect(() => {
+    axios.get('http://localhost:3001/persons')
+         .then(response => {setPersons(response.data)})
+  }, [])
+  
 
   const addName = (event) => {
     event.preventDefault()
