@@ -1,12 +1,28 @@
 import { useState } from 'react'
 
 
+const Header = ({ text }) => {
+  return <h2>{text}</h2>
+}
+
 const NameEntry = ({ name, number, filter }) => {
   if (name.toLowerCase().includes(filter.toLowerCase())) {
     return <div>{name} {number}</div>
   }
 }
 
+const Persons = ({ persons, newFilter }) => {
+  return (
+    persons.map((person, id) => <NameEntry key={id} 
+                                           name={person.name} 
+                                           number={person.number} 
+                                           filter={newFilter}/>)
+  )
+}
+
+const FormField = ({ text, value, handler }) => {
+  return <div>{text} <input value={value} onChange={handler}/></div>
+}
 
 const App = () => {
   const [persons, setPersons] = useState([
@@ -36,20 +52,16 @@ const App = () => {
 
   return (
     <div>
-      <h2>Phonebook</h2>
-      <div>filter shown with <input value={newFilter} onChange={handleNewFilter}/>  </div>
-      <h2>add a new</h2>
+      <Header text='Phonebook' />
+      <FormField text='filter shown with' value={newFilter} handler={handleNewFilter}/>
+      <Header text='add a new' />
       <form onSubmit={addName}>
-        <div>name:   <input value={newName}   onChange={handleNewName}/>  </div>
-        <div>number: <input value={newNumber} onChange={handleNewNumber}/></div>
+        <FormField text='name:'   value={newName}   handler={handleNewName}/>
+        <FormField text='number:' value={newNumber} handler={handleNewNumber}/>
         <button type="submit">add</button>
       </form>
-      
-      <h2>Numbers</h2>
-      {persons.map((person, id) => <NameEntry key={id} 
-                                    name={person.name} 
-                                    number={person.number} 
-                                    filter={newFilter}/>)}
+      <Header text='Numbers' />
+      <Persons persons={persons} newFilter={newFilter} />
     </div>
   )
 }
