@@ -1,16 +1,31 @@
 import personService from './services/persons'
 import { useState, useEffect } from 'react'
+import './styles.css'
+
+const Notification = ({ message }) => {
+  if (message === null) {
+    return null
+  }
+
+  return (
+    <div className='notification'>
+      {message}
+    </div>
+  )
+}
 
 const Header = ({ text }) => {
   return <h2>{text}</h2>
 }
 
-const handleDelete = (person, persons, setPersons) => {
+const handleDelete = (person, persons, setPersons, setSuccessMessage) => {
   if (confirm(`Delete ${person.name}?`)) {
     personService.remove(person.id)
                  .then(response => {
                   const newPersons = persons.filter(p => p.id !== response.data.id)
                   setPersons(newPersons)
+                  setSuccessMessage(`Removed ${person.name}`)
+                  setTimeout(() => {setSuccessMessage(null)}, 2000)
                 })
   }
 }
@@ -25,23 +40,24 @@ const updateNumber = (persons, oldPerson, newNumber) => {
   return newPersons
 }
 
-const NameEntry = ({ person, persons, filter, setPersons }) => {
+const NameEntry = ({ person, persons, filter, setPersons, setSuccessMessage }) => {
   if (person.name.toLowerCase().includes(filter.toLowerCase())) {
     return (
       <div>
-        {person.name} {person.number} <button onClick={() => handleDelete(person, persons, setPersons)}>delete</button>
+        {person.name} {person.number} <button onClick={() => handleDelete(person, persons, setPersons, setSuccessMessage)}>delete</button>
       </div>
     ) 
   }
 }
 
-const Persons = ({ persons, newFilter, setPersons }) => {
+const Persons = ({ persons, newFilter, setPersons, setSuccessMessage }) => {
   return (
     persons.map(person => <NameEntry key={person.id} 
                                      person={person} 
                                      persons={persons}
                                      filter={newFilter}
-                                     setPersons={setPersons}/>)
+                                     setPersons={setPersons}
+                                     setSuccessMessage={setSuccessMessage}/>)
   )
 }
 
@@ -54,6 +70,8 @@ const App = () => {
   const [newFilter, setNewFilter] = useState('')
   const [newName,   setNewName]   = useState('')
   const [newNumber, setNewNumber] = useState('')
+
+  const [successMessage, setSuccessMessage] = useState(null)
 
   useEffect(() => {
     personService.getAll()
@@ -71,6 +89,9 @@ const App = () => {
                       setPersons(updateNumber(persons, match, newNumber))
                       setNewName('')
                       setNewNumber('')
+
+                      setSuccessMessage(`Updated ${newName}`)
+                      setTimeout(() => {setSuccessMessage(null)}, 2000)
                      })
       }
       
@@ -81,6 +102,9 @@ const App = () => {
                     setPersons(persons.concat(response.data))
                     setNewName('')
                     setNewNumber('')
+
+                    setSuccessMessage(`Added ${newName}`)
+                    setTimeout(() => {setSuccessMessage(null)}, 2000)
                    })
     }
   }
@@ -92,6 +116,7 @@ const App = () => {
   return (
     <div>
       <Header text='Phonebook' />
+      <Notification message={successMessage} />
       <FormField text='filter shown with' value={newFilter} handler={handleNewFilter}/>
       <Header text='add a new' />
       <form onSubmit={addName}>
@@ -100,7 +125,7 @@ const App = () => {
         <button type='submit'>add</button>
       </form>
       <Header text='Numbers' />
-      <Persons persons={persons} newFilter={newFilter} setPersons={setPersons} />
+      <Persons persons={persons} newFilter={newFilter} setPersons={setPersons} setSuccessMessage={setSuccessMessage} />
     </div>
   )
 }
