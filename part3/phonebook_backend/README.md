@@ -1,4 +1,1 @@
-# fsopen-exercise3
-
-Exercise 3 of full stack open had to be completed in a separate repository.
-See: https://github.com/vaketola/fsopen/
+Link to backend app: https://fsopen-phonebook-or3o.onrender.com
