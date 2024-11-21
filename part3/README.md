@@ -6,6 +6,6 @@ The old other repo with commits for exercises 3.1-3.9 is still available at:
 
 https://github.com/vaketola/fsopen-exercise3
 
-From Render:
+From Render: "Your free instance will spin down with inactivity, which can delay requests by 50 seconds or more."
 
-"Your free instance will spin down with inactivity, which can delay requests by 50 seconds or more."
+Link to backend app: https://fsopen-phonebook-or3o.onrender.com
