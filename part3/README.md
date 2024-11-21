@@ -8,4 +8,4 @@ https://github.com/vaketola/fsopen-exercise3
 
 From Render: "Your free instance will spin down with inactivity, which can delay requests by 50 seconds or more."
 
-Link to backend app: https://fsopen-phonebook-or3o.onrender.com
+Link to app: https://fsopen-phonebook-or3o.onrender.com
