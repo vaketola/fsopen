@@ -33,8 +33,8 @@ const Header = ({ text }) => {
 const handleDelete = (person, persons, setPersons, setSuccessMessage, setErrorMessage) => {
   if (confirm(`Delete ${person.name}?`)) {
     personService.remove(person.id)
-                 .then(response => {
-                  const newPersons = persons.filter(p => p.id !== response.data.id)
+                 .then(() => {
+                  const newPersons = persons.filter(p => p.id !== person.id)
                   setPersons(newPersons)
                   setSuccessMessage(`Removed ${person.name}`)
                   setTimeout(() => {setSuccessMessage(null)}, 3000)
