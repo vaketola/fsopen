@@ -39,6 +39,7 @@ app.use((request, response, next) => {
 })
 
 app.use(express.json())
+app.use(express.static('dist'))
 
 morgan.token('body', (request, response) => {return JSON.stringify(request.body)})
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
