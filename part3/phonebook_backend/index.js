@@ -58,12 +58,7 @@ app.put('/api/persons/:id', (request, response, next) => {
         return response.status(400).json({error: 'content must contain a number'})
     }
 
-    const person = new Person({
-        name:   body.name,
-        number: body.number
-    })
-
-    Person.findByIdAndUpdate(request.params.id, person).then(newPerson => {
+    Person.findByIdAndUpdate(request.params.id, {name: body.name, number: body.number}).then(newPerson => {
         if (newPerson) {
             response.json(newPerson)
         } else {
