@@ -9,6 +9,7 @@ const PORT = process.env.PORT
 
 // most middleware
 app.use(express.static(path.join(__dirname, 'public')))
+app.get('/favicon.ico', (req, res) => res.status(204).end())
 
 app.use((request, response, next) => {
     request.requestTime = new Date()
@@ -22,9 +23,6 @@ morgan.token('body', (request, response) => {return JSON.stringify(request.body)
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body')) // This is equivalent to 'tiny' + body (from the docs)
 
 app.use(cors({origin: `http://localhost:${PORT}`}))
-
-// serve favicon!
-app.use(express.static(path.join(__dirname, 'public')));
 
 
 app.get('/', (request, response) => {response.send('<h2>Phonebook<h2>')})
