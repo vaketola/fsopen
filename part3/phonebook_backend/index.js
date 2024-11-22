@@ -23,6 +23,9 @@ app.use(morgan(':method :url :status :res[content-length] - :response-time ms :b
 
 app.use(cors({origin: `http://localhost:${PORT}`}))
 
+// serve favicon!
+app.use(express.static(path.join(__dirname, 'public')));
+
 
 app.get('/', (request, response) => {response.send('<h2>Phonebook<h2>')})
 
