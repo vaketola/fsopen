@@ -5,7 +5,7 @@ const cors = require('cors')
 const Person = require('./models/person')
 const path = require('path')
 const app = express()
-
+const PORT = process.env.PORT
 
 // most middleware
 app.use(express.static(path.join(__dirname, 'public')))
@@ -21,7 +21,7 @@ app.use(express.static('dist'))
 morgan.token('body', (request, response) => {return JSON.stringify(request.body)})
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body')) // This is equivalent to 'tiny' + body (from the docs)
 
-app.use(cors({origin: 'http://localhost:5173'}))
+app.use(cors({origin: `http://localhost:${PORT}`}))
 
 
 app.get('/', (request, response) => {response.send('<h2>Phonebook<h2>')})
@@ -98,7 +98,6 @@ const errorHandler = (error, request, response, next) => {
 app.use(errorHandler)
 
 
-const PORT = process.env.PORT
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 })
