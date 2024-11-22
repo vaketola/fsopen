@@ -45,9 +45,9 @@ app.get('/api/persons/:id', (request, response) => {
 })
 
 app.delete('/api/persons/:id', (request, response) => {
-    const id = request.params.id
-    persons = persons.filter(person => person.id !== id)
-    response.status(204).end()
+    Person.findByIdAndRemove(request.params.id).then(() => {
+        response.status(204).end()
+    })
 })
 
 app.post('/api/persons', (request, response) => {
@@ -61,9 +61,11 @@ app.post('/api/persons', (request, response) => {
     if (!body.number) {
         return response.status(400).json({error: 'content must contain a number'})
     }
-    if (persons.find(person => person.name.toLowerCase() === body.name.toLowerCase())) {
-        return response.status(400).json({error: 'name must be unique'})
-    }
+    Person.findOne({name: body.name}).then(person => {
+        if (person) {
+            return response.status(400).json({error: 'name must be unique'})
+        }
+    })
 
     const person = new Person({
         name:   body.name,
