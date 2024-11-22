@@ -70,7 +70,6 @@ app.post('/api/persons', (request, response) => {
             name:   body.name,
             number: body.number
         })
-        // console.log(person)
 
         person.save().then(savedPerson =>{
             response.json(savedPerson)
