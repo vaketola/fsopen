@@ -106,8 +106,6 @@ const App = () => {
     if (match) {
       setNewName('')
       setNewNumber('')
-      setErrorMessage(`${newName} is already added to the phonebook`)
-      setTimeout(() => {setErrorMessage(null)}, 3000)
       if (confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
         const newPerson = {name:newName, number:newNumber}
         personService.update(match.id, newPerson)
@@ -121,6 +119,8 @@ const App = () => {
                      })
       }
     } else {
+      setErrorMessage(`${newName} is already added to the phonebook`)
+      setTimeout(() => {setErrorMessage(null)}, 3000)
       const newPerson = {name:newName, number:newNumber}
       personService.create(newPerson)
                    .then(response => {
