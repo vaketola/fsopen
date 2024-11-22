@@ -22,7 +22,7 @@ app.use(express.static('dist'))
 morgan.token('body', (request, response) => {return JSON.stringify(request.body)})
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body')) // This is equivalent to 'tiny' + body (from the docs)
 
-app.use(cors({origin: `http://localhost:${PORT}`}))
+app.use(cors({origin: '*'}))
 
 
 app.get('/', (request, response) => {response.send('<h2>Phonebook<h2>')})
