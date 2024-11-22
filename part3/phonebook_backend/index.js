@@ -24,7 +24,7 @@ app.use(morgan(':method :url :status :res[content-length] - :response-time ms :b
 app.use(cors({origin: 'http://localhost:5173'}))
 
 
-app.get('/', (request, response) => {response.send('<h2>Phonebook<h2>')})
+// app.get('/', (request, response) => {response.send('<h2>Phonebook<h2>')})
 
 app.get('/info', (request, response) => {
     Person.countDocuments({}).then(count => {
