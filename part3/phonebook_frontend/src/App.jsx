@@ -97,7 +97,13 @@ const App = () => {
 
   useEffect(() => {
     personService.getAll()
-                 .then(response => {setPersons(response.data)})
+                 .then(
+                  response => {setPersons(response.data)}
+                 ).catch(error => {
+                  console.log(error.response.data.error);
+                  setErrorMessage(error.response.data.error)
+                  setTimeout(() => {setErrorMessage(null)}, 3000)
+                 })
   }, [])  
 
   const addName = (event) => {
@@ -116,6 +122,10 @@ const App = () => {
 
                       setSuccessMessage(`Updated ${newName}`)
                       setTimeout(() => {setSuccessMessage(null)}, 3000)
+                     }).catch(error => {
+                      console.log(error.response.data.error);
+                      setErrorMessage(error.response.data.error)
+                      setTimeout(() => {setErrorMessage(null)}, 3000)
                      })
       }
     } else {
@@ -130,6 +140,10 @@ const App = () => {
 
                     setSuccessMessage(`Added ${newName}`)
                     setTimeout(() => {setSuccessMessage(null)}, 3000)
+                   }).catch(error => {
+                    console.log(error.response.data.error);
+                    setErrorMessage(error.response.data.error)
+                    setTimeout(() => {setErrorMessage(null)}, 3000)
                    })
     }
   }
