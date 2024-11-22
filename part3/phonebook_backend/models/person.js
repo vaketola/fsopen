@@ -24,7 +24,7 @@ const personSchema = new mongoose.Schema({
             validator: function(v) {
                 // Some people, when confronted with a problem, think 
                 // "I know, I'll use regular expressions." 
-                // Now they have two problems.
+                // Now they have two problems. 
                 return /^\d{2,3}-\d+$/.test(v)
             }
         }
