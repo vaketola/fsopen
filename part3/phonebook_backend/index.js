@@ -61,20 +61,23 @@ app.post('/api/persons', (request, response) => {
     if (!body.number) {
         return response.status(400).json({error: 'content must contain a number'})
     }
-    Person.findOne({name: body.name}).then(person => {
-        if (person) {
+    Person.findOne({name: body.name}).then(oldPerson => {
+        if (oldPerson) {
             return response.status(400).json({error: 'name must be unique'})
         }
-    })
 
-    const person = new Person({
-        name:   body.name,
-        number: body.number
-    })
-    // console.log(person)
+        const person = new Person({
+            name:   body.name,
+            number: body.number
+        })
+        // console.log(person)
 
-    person.save().then(savedPerson =>{
-        response.json(savedPerson)
+        person.save().then(savedPerson =>{
+            response.json(savedPerson)
+        })
+    }).catch(error => {
+        console.log(error)
+        response.status(500).json({error: 'failed to find person'})
     })
 })
 
