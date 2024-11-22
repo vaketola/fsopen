@@ -46,6 +46,20 @@ const handleDelete = (person, persons, setPersons, setSuccessMessage, setErrorMe
   }
 }
 
+const updateNumber = (persons, oldPerson, newNumber) => {
+  return persons.map(person => {
+    if (person.id === oldPerson.id) {
+      const newPerson = {
+        id: person.id,
+        name: person.name,
+        number: newNumber
+      }
+      return newPerson
+    }
+    return person
+  })
+}
+
 const NameEntry = ({ person, persons, filter, setPersons, setSuccessMessage, setErrorMessage }) => {
   if (person.name.toLowerCase().includes(filter.toLowerCase())) {
     return (
@@ -97,8 +111,8 @@ const App = () => {
       if (confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
         const newPerson = {name:newName, number:newNumber}
         personService.update(match.id, newPerson)
-                     .then((newPerson) => {
-                      setPersons(persons.map(person => person.id === match.id ? newPerson : person))
+                     .then(() => {
+                      setPersons(updateNumber(persons, match, newNumber))
                       setNewName('')
                       setNewNumber('')
 
