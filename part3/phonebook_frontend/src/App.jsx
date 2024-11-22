@@ -46,16 +46,6 @@ const handleDelete = (person, persons, setPersons, setSuccessMessage, setErrorMe
   }
 }
 
-// const updateNumber = (persons, oldPerson, newNumber) => {
-//   const newPersons = persons.map(person => {
-//     if (person.id === oldPerson.id) {
-//       return { ...person, number:newNumber }
-//     }
-//     return person
-//   })
-//   return newPersons
-// }
-
 const NameEntry = ({ person, persons, filter, setPersons, setSuccessMessage, setErrorMessage }) => {
   if (person.name.toLowerCase().includes(filter.toLowerCase())) {
     return (
@@ -104,18 +94,18 @@ const App = () => {
       setNewNumber('')
       setErrorMessage(`${newName} is already added to the phonebook`)
       setTimeout(() => {setErrorMessage(null)}, 3000)
-      // if (confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
-      //   const newPerson = {name:newName, number:newNumber}
-      //   personService.update(match.id, newPerson)
-      //                .then(() => {
-      //                 setPersons(updateNumber(persons, match, newNumber))
-      //                 setNewName('')
-      //                 setNewNumber('')
+      if (confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
+        const newPerson = {name:newName, number:newNumber}
+        personService.update(match.id, newPerson)
+                     .then((newPerson) => {
+                      setPersons(persons.map(person => person.id === match.id ? newPerson : person))
+                      setNewName('')
+                      setNewNumber('')
 
-      //                 setSuccessMessage(`Updated ${newName}`)
-      //                 setTimeout(() => {setSuccessMessage(null)}, 3000)
-      //                })
-      // }
+                      setSuccessMessage(`Updated ${newName}`)
+                      setTimeout(() => {setSuccessMessage(null)}, 3000)
+                     })
+      }
     } else {
       const newPerson = {name:newName, number:newNumber}
       personService.create(newPerson)

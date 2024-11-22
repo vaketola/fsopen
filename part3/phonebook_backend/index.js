@@ -46,6 +46,32 @@ app.get('/api/persons/:id', (request, response, next) => {
     }).catch(error => next(error))
 })
 
+app.put('/api/persons/:id', (request, response, next) => {
+    const body = request.body 
+    if (!body) {
+        return response.status(400).json({error: 'invalid request content'})
+    }
+    if (!body.name) {
+        return response.status(400).json({error: 'content must contain a name'})
+    }
+    if (!body.number) {
+        return response.status(400).json({error: 'content must contain a number'})
+    }
+
+    const person = new Person({
+        name:   body.name,
+        number: body.number
+    })
+
+    Person.findByIdAndUpdate(request.params.id, person).then(newPerson => {
+        if (newPerson) {
+            response.json(newPerson)
+        } else {
+            response.status(404).json({error: 'Person not found'})
+        }
+    }).catch(error => next(error))
+})
+
 app.delete('/api/persons/:id', (request, response, next) => {
     Person.findByIdAndDelete(request.params.id).then(() => {
         response.status(204).end()
@@ -63,6 +89,7 @@ app.post('/api/persons', (request, response, next) => {
     if (!body.number) {
         return response.status(400).json({error: 'content must contain a number'})
     }
+
     Person.findOne({name: body.name}).then(oldPerson => {
         if (oldPerson) {
             return response.status(400).json({error: 'name must be unique'})
