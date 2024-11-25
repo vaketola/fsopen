@@ -25,8 +25,46 @@ const favoriteBlog = (blogs) => {
   return favorite
 }
 
+const mostBlogs = (blogs) => {
+  const authors = blogs.map((blog) => blog.author).sort()
+  if (authors.length === 0) return null
+
+  const state = {
+    currentAuthor:authors[0], 
+    currentBlogs:0, 
+    maxAuthor:authors[0], 
+    maxBlogs:0
+  }
+
+  const compareAuthors = (state, author) => {
+    if (state.currentAuthor === author) {
+      state.currentBlogs += 1
+    } else {
+      if (state.currentBlogs > state.maxBlogs) {
+        state.maxAuthor = state.currentAuthor
+        state.maxBlogs = state.currentBlogs
+      }
+      state.currentAuthor = author 
+      state.currentBlogs = 1
+    }
+    return state
+  }
+
+  authors.reduce(compareAuthors, state)
+
+  if (state.currentBlogs > state.maxBlogs) {
+    state.maxAuthor = state.currentAuthor
+    state.maxBlogs = state.currentBlogs
+  }
+  
+  if (!state.maxAuthor) state.maxAuthor = null
+
+  return { author: state.maxAuthor, blogs: state.maxBlogs }
+}
+
 module.exports = {
   dummy, 
   totalLikes,
-  favoriteBlog
+  favoriteBlog,
+  mostBlogs
 }

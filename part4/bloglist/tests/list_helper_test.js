@@ -30,13 +30,13 @@ describe('total likes', () => {
   })
 
   test('blogs with missing fields are legal', () => {
-    const blogList = [{ "title":"Test", "likes":5 }, { "title":"Test2" }]
+    const blogList = [{ 'title':'Test', 'likes':5 }, { 'title':'Test2' }]
     const result = listHelper.totalLikes(blogList)
     assert.strictEqual(result, 5)
   })
 
   test('blogs with negative likes are illegal?', () => {
-    const blogList = [ { "title":"Test", "likes":5 }, { "title":"Test2", "likes":-3 } ]
+    const blogList = [ { 'title':'Test', 'likes':5 }, { 'title':'Test2', 'likes':-3 } ]
     const result = listHelper.totalLikes(blogList)
     assert.strictEqual(result, 5)
   })
@@ -60,14 +60,38 @@ describe('favorite blog', () => {
   })
 
   test('blogs with missing fields are legal', () => {
-    const blogList = [{ "title":"Test" }, { "title":"Test2", "likes":5 }]
+    const blogList = [{ 'title':'Test' }, { 'title':'Test2', 'likes':5 }]
     const result = listHelper.favoriteBlog(blogList)
     assert.deepStrictEqual(result, blogList[1])
   })
   
   test('list of blogs without likes fields returns any blog', () => {
-    const blogList = [{ "title":"Test" }, { "title":"Test2" }]
+    const blogList = [{ 'title':'Test' }, { 'title':'Test2' }]
     const result = listHelper.favoriteBlog(blogList)
     assert(blogList.includes(result))
+  })
+})
+
+describe('most blogs', () => {
+  test('example list returns expected author and number of blogs', () => {
+    const result = listHelper.mostBlogs(blogsList)
+    assert.deepStrictEqual(result, { author:'Robert C. Martin', blogs:3 })
+  })
+
+  test('empty list returns null', () => {
+    const result = listHelper.mostBlogs([])
+    assert.deepStrictEqual(result, null)
+  })
+
+  test('list with one blog returns expected author and number of blogs', () => {
+    const listWithOneBlog = [blogsList[1]]
+    const result = listHelper.mostBlogs(listWithOneBlog)
+    assert.deepStrictEqual(result, { author:blogsList[1].author, blogs:1 })
+  })
+
+  test('blogs with missing fields are legal, null author is null', () => {
+    const blogList = [{ 'title':'Test' }, { 'title':'Test1' }, { 'title':'Test2', 'author':'Joe Test' }]
+    const result = listHelper.mostBlogs(blogList)
+    assert.deepStrictEqual(result, { author:null, blogs:2 })
   })
 })
