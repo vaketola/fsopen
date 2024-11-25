@@ -62,9 +62,50 @@ const mostBlogs = (blogs) => {
   return { author: state.maxAuthor, blogs: state.maxBlogs }
 }
 
+const mostLikes = (blogs) => {
+  const authorLikes = blogs.map((blog) => ({ author:blog.author, likes:blog.likes })).sort()
+  if (authorLikes.length === 0) return null
+
+  const state = {
+    currentAuthor:authorLikes[0].author, 
+    currentLikes:0, 
+    maxAuthor:authorLikes[0].author, 
+    maxLikes:0
+  }
+
+  const compareAuthorLikes = (state, authorLike) => {
+    if (state.currentAuthor === authorLike.author) {
+      state.currentLikes += authorLike.likes
+    } else {
+      if (state.currentLikes > state.maxLikes) {
+        state.maxAuthor = state.currentAuthor
+        state.maxLikes = state.currentLikes
+      }
+      state.currentAuthor = authorLike.author 
+      state.currentLikes = authorLike.likes
+    }
+    return state
+  }
+
+  // console.log(state)
+  authorLikes.reduce(compareAuthorLikes, state)
+
+  if (state.currentLikes > state.maxLikes) {
+    state.maxAuthor = state.currentAuthor
+    state.maxLikes = state.currentLikes
+  }
+  
+  if (!state.maxAuthor) state.maxAuthor = null
+  if (!state.maxLikes) state.maxLikes = 0
+
+  return { author: state.maxAuthor, likes: state.maxLikes }
+}
+
+
 module.exports = {
   dummy, 
   totalLikes,
   favoriteBlog,
-  mostBlogs
+  mostBlogs,
+  mostLikes
 }
