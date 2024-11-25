@@ -1,8 +1,16 @@
 const { test, describe } = require('node:test')
 const assert = require('node:assert')
 const listHelper = require('../utils/list_helper')
-const blogsList = require('./blogsList')
+const blogsList = require('./blogsList') // do not modify blogsList.js!
 
+describe('dummy', () => {
+  test('dummy returns one', () => {
+    const blogs = []
+
+    const result = listHelper.dummy(blogs)
+    assert.strictEqual(result, 1)
+  })
+})
 
 describe('total likes', () => {
   test('example list total matches expected', () => {
@@ -34,11 +42,32 @@ describe('total likes', () => {
   })
 })
 
-describe('dummy', () => {
-  test('dummy returns one', () => {
-    const blogs = []
+describe('favorite blog', () => {
+  test('example list highest likes object is expected blog', () => {
+    const result = listHelper.favoriteBlog(blogsList)
+    assert.strictEqual(result, blogsList[2])
+  })
 
-    const result = listHelper.dummy(blogs)
-    assert.strictEqual(result, 1)
+  test('empty list returns null', () => {
+    const result = listHelper.favoriteBlog([])
+    assert.strictEqual(result, null)
+  })
+
+  test('list with one blog returns that blog', () => {
+    const listWithOneBlog = [blogsList[1]]
+    const result = listHelper.favoriteBlog(listWithOneBlog)
+    assert.strictEqual(result, blogsList[1])
+  })
+
+  test('blogs with missing fields are legal', () => {
+    const blogList = [{ "title":"Test" }, { "title":"Test2", "likes":5 }]
+    const result = listHelper.favoriteBlog(blogList)
+    assert.strictEqual(result, blogList[1])
+  })
+  
+  test('list of blogs without likes fields returns any blog', () => {
+    const blogList = [{ "title":"Test" }, { "title":"Test2" }]
+    const result = listHelper.favoriteBlog(blogList)
+    assert(blogList.includes(result))
   })
 })

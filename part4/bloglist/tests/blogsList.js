@@ -1,5 +1,6 @@
 // from course material 
 // https://github.com/fullstack-hy2020/misc/blob/master/blogs_for_test.md
+// the tests will not work if this is modified!
 
 const blogs = [
   {
