@@ -1,13 +1,13 @@
-const express = require('express')
-const app = express()
-const cors = require('cors')
-const mongoose = require('mongoose')
+const express     = require('express')
+const app         = express()
+const cors        = require('cors')
+const mongoose    = require('mongoose')
 const blogsRouter = require('./controllers/blogs')
-const logger = require('./utils/logger')
-const config = require('./utils/config')
-
+const logger      = require('./utils/logger')
+const config      = require('./utils/config')
 
 mongoose.set('strictQuery', false)
+
 mongoose.connect(config.MONGODB_URI).then(result => {
   logger.info('connected to MongoDB')
 }).catch(error => {
