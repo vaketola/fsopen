@@ -45,24 +45,24 @@ describe('total likes', () => {
 describe('favorite blog', () => {
   test('example list highest likes object is expected blog', () => {
     const result = listHelper.favoriteBlog(blogsList)
-    assert.strictEqual(result, blogsList[2])
+    assert.deepStrictEqual(result, blogsList[2])
   })
 
   test('empty list returns null', () => {
     const result = listHelper.favoriteBlog([])
-    assert.strictEqual(result, null)
+    assert.deepStrictEqual(result, null)
   })
 
   test('list with one blog returns that blog', () => {
     const listWithOneBlog = [blogsList[1]]
     const result = listHelper.favoriteBlog(listWithOneBlog)
-    assert.strictEqual(result, blogsList[1])
+    assert.deepStrictEqual(result, blogsList[1])
   })
 
   test('blogs with missing fields are legal', () => {
     const blogList = [{ "title":"Test" }, { "title":"Test2", "likes":5 }]
     const result = listHelper.favoriteBlog(blogList)
-    assert.strictEqual(result, blogList[1])
+    assert.deepStrictEqual(result, blogList[1])
   })
   
   test('list of blogs without likes fields returns any blog', () => {
