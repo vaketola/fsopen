@@ -2,7 +2,9 @@ const express = require('express')
 const app = express()
 const cors = require('cors')
 const mongoose = require('mongoose')
-require('dotenv').config()
+const logger = require('./utils/logger')
+const config = require('./utils/config')
+app.use(express.json()) 
 
 const blogSchema = new mongoose.Schema({
   title: String,
@@ -13,12 +15,11 @@ const blogSchema = new mongoose.Schema({
 
 const Blog = mongoose.model('Blog', blogSchema)
 
-const MONGODB_URI = process.env.MONGODB_URI
 mongoose.set('strictQuery', false)
-mongoose.connect(MONGODB_URI).then(result => {
-  console.log('connected to MongoDB')
+mongoose.connect(config.MONGODB_URI).then(result => {
+  logger.info('connected to MongoDB')
 }).catch(error => {
-  console.log('error connecting to MongoDB', error.message)
+  logger.error('error connecting to MongoDB', error.message)
 })
 
 app.use(cors())
@@ -42,7 +43,6 @@ app.post('/api/blogs', (request, response) => {
   })
 })
 
-const PORT = process.env.PORT
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`)
+app.listen(config.PORT, () => {
+  logger.info(`Server running on port ${config.PORT}`)
 })
