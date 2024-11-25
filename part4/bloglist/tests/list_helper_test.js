@@ -27,10 +27,10 @@ describe('total likes', () => {
     assert.strictEqual(result, 5)
   })
 
-  test('blogs with negative likes are legal', () => {
+  test('blogs with negative likes are illegal?', () => {
     const blogList = [ { "title":"Test", "likes":5 }, { "title":"Test2", "likes":-3 } ]
     const result = listHelper.totalLikes(blogList)
-    assert.strictEqual(result, 2)
+    assert.strictEqual(result, 5)
   })
 })
 
