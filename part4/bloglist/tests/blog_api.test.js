@@ -6,8 +6,29 @@ const app = require('../app')
 
 const api = supertest(app)
 
+// // creates test user if needed
+// before(async () => {
+//   const newUser = {
+//     username: 'testuser',
+//     name: 'Test User',
+//     password: 'testpass'
+//   }
+
+//   await api
+//     .post('/api/users')
+//     .send(newUser)
+//     .expect(201)
+//     .expect('Content-Type', /application\/json/)
+// })
+let token
+before(async () => {
+  const user = { username: 'testuser', password: 'testpass' }
+  const login = await api.post('/api/login').send(user).expect(200)
+  token = login.body.token
+})
+
 let initLength = 0
-let testUserId = null
+let testUserId
 before(async () => {
   const Blog = require('../models/blog')
   const blogs = await Blog.find({})
@@ -18,7 +39,7 @@ before(async () => {
   testUserId = users.slice(-1)[0]._id
   console.log(testUserId)
 })
-let lastId = null
+let lastId
 beforeEach(async () => {
   const Blog = require('../models/blog')
   const blogs = await Blog.find({})
@@ -51,12 +72,12 @@ describe('HTTP POST request to /api/blogs', () => {
     const newBlog = {
       'author': `Test Author${initLength+1}`,
       'title': `This is a test title${initLength+1}`,
-      'url': `https://fullstackopen.com/en/part${initLength+1}/`,
-      'user': { 'userId': testUserId }
+      'url': `https://fullstackopen.com/en/part${initLength+1}/`
     }
 
     await api.post('/api/blogs')
              .send(newBlog)
+             .set('Authorization', `Bearer ${token}`)
              .expect(201)
              .expect('Content-Type', /application\/json/)
   })
@@ -88,6 +109,7 @@ describe('HTTP POST request to /api/blogs', () => {
 
     await api.post('/api/blogs')
              .send(newBlog)
+             .set('Authorization', `Bearer ${token}`)
              .expect(400)
   })
 
@@ -101,6 +123,7 @@ describe('HTTP POST request to /api/blogs', () => {
 
     await api.post('/api/blogs')
              .send(newBlog)
+             .set('Authorization', `Bearer ${token}`)
              .expect(400)
   })
 })
@@ -139,7 +162,9 @@ describe('updating a blog', () => {
 
 describe('HTTP DELETE request to /api/blogs', () => {
   test('return 204 on delete request', async() => {
-    await api.delete(`/api/blogs/${lastId}`).expect(204)
+    await api.delete(`/api/blogs/${lastId}`)
+             .set('Authorization', `Bearer ${token}`)
+             .expect(204)
   })
 
   test('correct number of blogs', async() => {

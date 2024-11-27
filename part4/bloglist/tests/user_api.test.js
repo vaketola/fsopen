@@ -13,6 +13,13 @@ const usersInDb = (async () => {
   return users.map(user => user.toJSON())
 })
 
+let token
+before(async () => {
+  const user = { username: 'mluukkai', password: 'salainen' }
+  const login = await api.post('/api/login').send(user).expect(200)
+  token1 = login.body.token
+})
+
 describe('when there is initially one user in db', () => {
   beforeEach(async () => {
     await User.deleteMany({})
@@ -35,6 +42,7 @@ describe('when there is initially one user in db', () => {
     await api
       .post('/api/users')
       .send(newUser)
+      .set('Authorization', `Bearer ${token}`)
       .expect(201)
       .expect('Content-Type', /application\/json/)
 
