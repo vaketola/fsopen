@@ -47,6 +47,95 @@ describe('when there is initially one user in db', () => {
 })
 
 
+describe('username and password requirements', () => {
+  test('code 400 received with short username', async () => {
+    const newUser = {
+      username: 'ml',
+      name: 'Test Name',
+      password: 'secretive',
+    }
+
+    await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+  })
+
+  test('number of users stays the same with short username', async () => {
+    const usersAtStart = await usersInDb()
+
+    const newUser = {
+      username: 'ml',
+      name: 'Test Name',
+      password: 'secretive',
+    }
+
+    await api.post('/api/users').send(newUser)
+
+    const usersAtEnd = await usersInDb()
+    assert.strictEqual(usersAtEnd.length, usersAtStart.length)
+  })
+
+  test('code 400 received with short password', async () => {
+    const newUser = {
+      username: 'ml123',
+      name: 'Test Name',
+      password: 'se',
+    }
+
+    await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+  })
+
+  test('number of users stays the same with short password', async () => {
+    const usersAtStart = await usersInDb()
+
+    const newUser = {
+      username: 'ml123',
+      name: 'Test Name',
+      password: 'se',
+    }
+
+    await api.post('/api/users').send(newUser)
+
+    const usersAtEnd = await usersInDb()
+    assert.strictEqual(usersAtEnd.length, usersAtStart.length)
+  })
+
+  test('both username and password are short also fails', async () => {
+    const usersAtStart = await usersInDb()
+
+    const newUser = {
+      username: 'ml',
+      name: 'Test Name',
+      password: 'se',
+    }
+
+    await api.post('/api/users').send(newUser).expect(400)
+
+    const usersAtEnd = await usersInDb()
+    assert.strictEqual(usersAtEnd.length, usersAtStart.length)
+  })
+
+  test('username must be unique', async () => {
+    const usersAtStart = await usersInDb()
+
+    const newUser = {
+      username: 'mluukkai',
+      name: 'Test Name',
+      password: 'secretive',
+    }
+
+    await api.post('/api/users').send(newUser).expect(400)
+
+    const usersAtEnd = await usersInDb()
+    assert.strictEqual(usersAtEnd.length, usersAtStart.length)
+  })
+})
+
+
 after(async () => {
   await mongoose.connection.close()
 })

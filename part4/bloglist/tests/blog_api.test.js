@@ -7,10 +7,16 @@ const app = require('../app')
 const api = supertest(app)
 
 let initLength = 0
+let testUserId = null
 before(async () => {
   const Blog = require('../models/blog')
   const blogs = await Blog.find({})
   initLength = blogs.length
+
+  const User = require('../models/user')
+  const users = await User.find({})
+  testUserId = users.slice(-1)[0]._id
+  console.log(testUserId)
 })
 let lastId = null
 beforeEach(async () => {
@@ -46,7 +52,7 @@ describe('HTTP POST request to /api/blogs', () => {
       'author': `Test Author${initLength+1}`,
       'title': `This is a test title${initLength+1}`,
       'url': `https://fullstackopen.com/en/part${initLength+1}/`,
-      'user': { 'userId': '6747575b903e672540b66825' }
+      'user': { 'userId': testUserId }
     }
 
     await api.post('/api/blogs')
@@ -77,7 +83,7 @@ describe('HTTP POST request to /api/blogs', () => {
       'author': `Test Author${initLength+2}`,
       'url': `https://fullstackopen.com/en/part${initLength+3}/`,
       'likes': 502 + initLength,
-      'user': { 'userId': '6747575b903e672540b66825' }
+      'user': { 'userId': testUserId }
     }
 
     await api.post('/api/blogs')
@@ -90,7 +96,7 @@ describe('HTTP POST request to /api/blogs', () => {
       'title': `This is a test title${initLength+3}`,
       'author': `Test Author${initLength+3}`,
       'likes': 503 + initLength,
-      'user': { 'userId': '6747575b903e672540b66825' }
+      'user': { 'userId': testUserId }
     }
 
     await api.post('/api/blogs')
@@ -105,7 +111,7 @@ describe('updating a blog', () => {
       'title': `This is a test title${initLength+1}`,
       'author': `Test Author${initLength+1}`,
       'likes': 9,
-      'user': { 'userId': '6747575b903e672540b66825' }
+      'user': { 'userId': testUserId }
     }
     await api.put('/api/blogs/507f1f77bcf86cd799439011')
              .send(newBlog)
@@ -113,7 +119,7 @@ describe('updating a blog', () => {
   })
   
   test('updating likes succeeds', async() => {
-    const newBlog = { 'likes': 9, 'user': { 'userId': '6747575b903e672540b66825' } }
+    const newBlog = { 'likes': 9, 'user': { 'userId': testUserId } }
     await api.put(`/api/blogs/${lastId}`)
              .send(newBlog)
              .expect(200)
