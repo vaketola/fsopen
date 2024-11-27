@@ -43,9 +43,10 @@ describe('HTTP GET request to /api/blogs', () => {
 describe('HTTP POST request to /api/blogs', () => {
   test('post succeeds with valid data', async() => {
     const newBlog = {
-      "author": `Test Author${initLength+1}`,
-      "title": `This is a test title${initLength+1}`,
-      "url": `https://fullstackopen.com/en/part${initLength+1}/`,
+      'author': `Test Author${initLength+1}`,
+      'title': `This is a test title${initLength+1}`,
+      'url': `https://fullstackopen.com/en/part${initLength+1}/`,
+      'user': { 'userId': '6747575b903e672540b66825' }
     }
 
     await api.post('/api/blogs')
@@ -73,9 +74,10 @@ describe('HTTP POST request to /api/blogs', () => {
 
   test('return 400 bad request if title missing', async() => {
     const newBlog = {
-      "author": `Test Author${initLength+2}`,
-      "url": `https://fullstackopen.com/en/part${initLength+3}/`,
-      "likes": 502 + initLength
+      'author': `Test Author${initLength+2}`,
+      'url': `https://fullstackopen.com/en/part${initLength+3}/`,
+      'likes': 502 + initLength,
+      'user': { 'userId': '6747575b903e672540b66825' }
     }
 
     await api.post('/api/blogs')
@@ -85,9 +87,10 @@ describe('HTTP POST request to /api/blogs', () => {
 
   test('return 400 bad request if url missing', async() => {
     const newBlog = {
-      "title": `This is a test title${initLength+3}`,
-      "author": `Test Author${initLength+3}`,
-      "likes": 503 + initLength
+      'title': `This is a test title${initLength+3}`,
+      'author': `Test Author${initLength+3}`,
+      'likes': 503 + initLength,
+      'user': { 'userId': '6747575b903e672540b66825' }
     }
 
     await api.post('/api/blogs')
@@ -99,9 +102,10 @@ describe('HTTP POST request to /api/blogs', () => {
 describe('updating a blog', () => {
   test('return 404 on nonexistant blog id', async() => {
     const newBlog = {
-      "title": `This is a test title${initLength+1}`,
-      "author": `Test Author${initLength+1}`,
-      "likes": 9
+      'title': `This is a test title${initLength+1}`,
+      'author': `Test Author${initLength+1}`,
+      'likes': 9,
+      'user': { 'userId': '6747575b903e672540b66825' }
     }
     await api.put('/api/blogs/507f1f77bcf86cd799439011')
              .send(newBlog)
@@ -109,7 +113,7 @@ describe('updating a blog', () => {
   })
   
   test('updating likes succeeds', async() => {
-    const newBlog = { "likes": 9 }
+    const newBlog = { 'likes': 9, 'user': { 'userId': '6747575b903e672540b66825' } }
     await api.put(`/api/blogs/${lastId}`)
              .send(newBlog)
              .expect(200)
