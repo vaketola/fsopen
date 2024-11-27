@@ -7,6 +7,6 @@ Content-Type: application/json
     "url": "https://fullstackopen.com/en/part1/",
     "likes": 500,
     "user": {
-      "userId": "67475ecf81948f20f7dff82c"
+      "userId": "67475eeb69c391f611537963"
     }
 }
