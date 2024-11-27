@@ -96,9 +96,39 @@ describe('HTTP POST request to /api/blogs', () => {
   })
 })
 
+describe('updating a blog', () => {
+  test('return 404 on nonexistant blog id', async() => {
+    const newBlog = {
+      "title": `This is a test title${initLength+1}`,
+      "author": `Test Author${initLength+1}`,
+      "likes": 9
+    }
+    await api.put('/api/blogs/507f1f77bcf86cd799439011')
+             .send(newBlog)
+             .expect(404)
+  })
+  
+  test('updating likes succeeds', async() => {
+    const newBlog = { "likes": 9 }
+    await api.put(`/api/blogs/${lastId}`)
+             .send(newBlog)
+             .expect(200)
+  })
+
+  test('correct number of blogs', async() => {
+    const response = await api.get('/api/blogs')
+    assert.strictEqual(response.body.length, initLength+1)
+  })
+
+  test('blog has updated likes', async() => {
+    const response = await api.get('/api/blogs')
+    const body = response.body.find((blog) => blog.title === `This is a test title${initLength+1}`)
+    assert.strictEqual(body.likes, 9)
+  })
+})
+
 describe('HTTP DELETE request to /api/blogs', () => {
   test('return 204 on delete request', async() => {
-    console.log(lastId)
     await api.delete(`/api/blogs/${lastId}`).expect(204)
   })
 
@@ -107,6 +137,7 @@ describe('HTTP DELETE request to /api/blogs', () => {
     assert.strictEqual(response.body.length, initLength)
   })
 })
+
 
 after(async () => {
   await mongoose.connection.close()
