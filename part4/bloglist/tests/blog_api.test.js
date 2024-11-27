@@ -38,10 +38,9 @@ describe('HTTP GET request to /api/blogs', () => {
 describe('HTTP POST request to /api/blogs', () => {
   test('post succeeds with valid data', async() => {
     const newBlog = {
-      "author": `Test Author${initLength+1}`,
-      "title": `This is a test title${initLength+1}`,
-      "url": `https://fullstackopen.com/en/part${initLength+1}/`,
-      //"likes": 501 + initLength
+      "author": `Test Author${initLength+2}`,
+      "title": `This is a test title${initLength+2}`,
+      "url": `https://fullstackopen.com/en/part${initLength+2}/`,
     }
 
     await api.post('/api/blogs')
@@ -57,14 +56,38 @@ describe('HTTP POST request to /api/blogs', () => {
 
   test('saved blog name is in database', async() => {
     const response = await api.get('/api/blogs')
-    const savedBlog = response.body.find((blog) => blog.title === `This is a test title${initLength+1}`)
+    const savedBlog = response.body.find((blog) => blog.title === `This is a test title${initLength+2}`)
     assert(savedBlog)
   })
 
   test('missing likes property defaulted to zero', async() => {
     const response = await api.get('/api/blogs')
-    const savedBlog = response.body.find((blog) => blog.title === `This is a test title${initLength+1}`)
+    const savedBlog = response.body.find((blog) => blog.title === `This is a test title${initLength+2}`)
     assert.strictEqual(savedBlog.likes, 0)
+  })
+
+  test('return 400 bad request if title missing', async() => {
+    const newBlog = {
+      "author": `Test Author${initLength+3}`,
+      "url": `https://fullstackopen.com/en/part${initLength+3}/`,
+      "likes": 502 + initLength
+    }
+
+    await api.post('/api/blogs')
+             .send(newBlog)
+             .expect(400)
+  })
+
+  test('return 400 bad request if url missing', async() => {
+    const newBlog = {
+      "title": `This is a test title${initLength+4}`,
+      "author": `Test Author${initLength+4}`,
+      "likes": 503 + initLength
+    }
+
+    await api.post('/api/blogs')
+             .send(newBlog)
+             .expect(400)
   })
 })
 
