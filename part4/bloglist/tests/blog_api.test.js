@@ -41,7 +41,7 @@ describe('HTTP POST request to /api/blogs', () => {
       "author": `Test Author${initLength+1}`,
       "title": `This is a test title${initLength+1}`,
       "url": `https://fullstackopen.com/en/part${initLength+1}/`,
-      "likes": 501 + initLength
+      //"likes": 501 + initLength
     }
 
     await api.post('/api/blogs')
@@ -59,6 +59,12 @@ describe('HTTP POST request to /api/blogs', () => {
     const response = await api.get('/api/blogs')
     const savedBlog = response.body.find((blog) => blog.title === `This is a test title${initLength+1}`)
     assert(savedBlog)
+  })
+
+  test('missing likes property defaulted to zero', async() => {
+    const response = await api.get('/api/blogs')
+    const savedBlog = response.body.find((blog) => blog.title === `This is a test title${initLength+1}`)
+    assert.strictEqual(savedBlog.likes, 0)
   })
 })
 
