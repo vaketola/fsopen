@@ -13,6 +13,14 @@ describe('HTTP GET request to /api/blogs', () => {
              .expect('Content-Type', /application\/json/)
   })
 
+  test('blog identifier is called id not _id', async() => {
+    const response = await api.get('/api/blogs')
+    response.body.map((blog) => {
+      assert(!blog._id)
+      assert(blog.id)
+    })
+  })
+
   test('there are three blogs', async() => {
     const response = await api.get('/api/blogs')
     assert.strictEqual(response.body.length, 3)
