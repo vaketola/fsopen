@@ -13,14 +13,12 @@ blogsRouter.post('/', async (request, response) => {
   const blog = new Blog(request.body)
   const user = request.user
   
-  if (!user) response.status(401).json({ error: 'token invalid' })
-  if (!blog.likes) blog.likes = 0
+  if (!user) return response.status(401).json({ error: 'token invalid' })
   if (!blog.title || !blog.url) {
     return response.status(400).json({ error: 'title and URL are required' })
   }
-  if (!user) {
-    return response.status(400).json({ error: 'user not found' })
-  }
+
+  if (!blog.likes) blog.likes = 0
   blog.user = user._id
   
   const result = await blog.save()
