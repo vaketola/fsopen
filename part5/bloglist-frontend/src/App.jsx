@@ -2,6 +2,18 @@ import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import './styles.css'
+
+const Notification = ({ message }) => {
+  if (message === null) {
+    return null
+  }
+  return (
+    <div className='notification'>
+      {message}
+    </div>
+  )
+}
 
 const App = () => {
   const [user, setUser] = useState(null)
@@ -12,6 +24,8 @@ const App = () => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
+
+  const [notificationMessage, setNotificationMessage] = useState(null)
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -24,21 +38,31 @@ const App = () => {
       setUsername('')
       setPassword('')
     } catch (exception) {
-      console.log('wrong login credentials')
+      setNotificationMessage('wrong login credentials')
+      setTimeout(() => {setNotificationMessage(null)}, 3000)
     }
   }
 
   const handleCreate = async (event) => {
     event.preventDefault()
     
+    if ((title==='' || url==='') || (!title || !title) ) {
+      setNotificationMessage('title and url are required')
+      setTimeout(() => {setNotificationMessage(null)}, 3000)
+      return
+    }
+
     try {
       blogService.create({ title:title, author:author, url:url })
                  .then(blog => { setBlogs(blogs.concat(blog)) })
       setTitle('')
       setAuthor('')
       setUrl('')
+      setNotificationMessage(`a new blog ${title} by ${author} was created`)
+      setTimeout(() => {setNotificationMessage(null)}, 3000)
     } catch (exception) {
-      console.log('failed to create blog')
+      setNotificationMessage('failed to create blog')
+      setTimeout(() => {setNotificationMessage(null)}, 3000)
     }
     
   }
@@ -61,6 +85,7 @@ const App = () => {
     return (
       <div>
         <h2>blogs</h2>
+        <Notification message={notificationMessage}/>
         <form onSubmit={handleLogin}>
           <div>
             username <input type='text' value={username} name='username'
@@ -80,6 +105,7 @@ const App = () => {
   return (
     <div>
       <h2>blogs</h2>
+      <Notification message={notificationMessage}/>
       <div>{user.name} logged in</div>
       <button onClick={() => {
         window.localStorage.removeItem('loggedBlogAppUser')
