@@ -6,6 +6,7 @@ const baseUrl = '/api/blogs'
 const setToken = (newToken) => {
   const token = `Bearer ${newToken}`
   // console.log(token)
+  // I read the note on using local storage, but this works for now.
   window.localStorage.setItem('loggedBlogAppUserToken', JSON.stringify(token))
 }
 
