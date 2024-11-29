@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import Blog from './components/Blog'
+import BlogForm from './components/BlogForm'
 import Togglable from './components/Togglable'
 import blogService from './services/blogs'
 import loginService from './services/login'
@@ -22,10 +23,6 @@ const App = () => {
   const [password, setPassword] = useState('')
   const [blogs, setBlogs] = useState([])
 
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
-
   const [notificationMessage, setNotificationMessage] = useState(null)
 
   const togglableFormRef = useRef()
@@ -46,25 +43,22 @@ const App = () => {
     }
   }
 
-  const handleCreate = async (event) => {
-    event.preventDefault()
-    
-    if ((title==='' || url==='') || (!title || !title) ) {
+  const handleCreate = async (blogObject) => {
+
+    if (!blogObject.title || !blogObject.url) {
       setNotificationMessage('title and url are required')
       setTimeout(() => {setNotificationMessage(null)}, 3000)
       return
     }
 
     try {
-      blogService.create({ title:title, author:author, url:url })
+      blogService.create(blogObject)
                  .then(blog => { setBlogs(blogs.concat(blog)) })
-      setTitle('')
-      setAuthor('')
-      setUrl('')
       togglableFormRef.current.toggleVisibility()
-      setNotificationMessage(`a new blog ${title} by ${author} was created`)
+      setNotificationMessage(`a new blog ${blogObject.title} by ${blogObject.author} was created`)
       setTimeout(() => {setNotificationMessage(null)}, 3000)
     } catch (exception) {
+      console.log(exception)
       setNotificationMessage('failed to create blog')
       setTimeout(() => {setNotificationMessage(null)}, 3000)
     }
@@ -118,19 +112,7 @@ const App = () => {
       }}>logout
       </button>
       <Togglable buttonLabel='create new' ref={togglableFormRef}>
-        <h2>create new</h2>
-        <form onSubmit={handleCreate}>
-          <div>title: <input type='text' value={title} name='title'
-              onChange={({ target }) => setTitle(target.value)}
-            /></div>
-          <div>author: <input type='text' value={author} name='author'
-              onChange={({ target }) => setAuthor(target.value)}
-            /></div>
-          <div>url: <input type='text' value={url} name='url'
-              onChange={({ target }) => setUrl(target.value)}
-            /></div>
-          <button>create</button>
-        </form>
+        <BlogForm handleCreate={handleCreate}/>
       </Togglable>
       <p>
         {blogs.map(blog => <Blog key={blog.id} blog={blog} />)}
