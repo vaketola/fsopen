@@ -115,7 +115,7 @@ const App = () => {
         <BlogForm handleCreate={handleCreate}/>
       </Togglable>
       <div>
-        {blogs.map(blog => <Blog key={blog.id} blog={blog} />)}
+        {blogs.slice().sort((x,y) => y.likes-x.likes).map(blog => <Blog key={blog.id} blog={blog} />)}
       </div>
     </div>
   )
