@@ -48,6 +48,7 @@ blogsRouter.put('/:id', async (request, response) => {
 
   let newUser = await User.findById(request.body.user.userId)
   if (!newUser) newUser = await User.findById(request.body.user.id)
+  if (!newUser) return response.status(400).json({ error: 'user not found' })
   body.user = newUser._id
   const result = await Blog.findByIdAndUpdate(request.params.id, body, { new:true })
 

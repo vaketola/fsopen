@@ -7,6 +7,12 @@ describe('Blog app', () => {
       password: 'cypresspass'
     }
     cy.request('POST', 'http://localhost:3003/api/users/', user)
+    const user2 = {
+      name: 'Cypress 2User',
+      username: 'cypress2user',
+      password: 'cypresspass'
+    }
+    cy.request('POST', 'http://localhost:3003/api/users/', user2)
 
     cy.visit('http://localhost:5173')
   })
@@ -68,6 +74,24 @@ describe('Blog app', () => {
       cy.contains('likes 0')
       cy.contains('like').click()
       cy.contains('likes 1')
+    })
+
+    it('the delete button can be seen', function() {
+      cy.contains('logout').click()
+      cy.get('#username').type('cypressuser')
+      cy.get('#password').type('cypresspass')
+      cy.contains('login').click()
+      cy.contains('view').click()
+      cy.contains('remove')
+    })
+
+    it('the delete button is not seen by another user', function() {
+      cy.contains('logout').click()
+      cy.get('#username').type('cypress2user')
+      cy.get('#password').type('cypresspass')
+      cy.contains('login').click()
+      cy.contains('view').click()
+      cy.contains('remove').should('not.exist')
     })
   })
 })
