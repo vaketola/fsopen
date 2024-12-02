@@ -43,6 +43,15 @@ const App = () => {
     }
   }
 
+  const handleDelete = async (blogId) => {
+    try {
+      blogService.remove(blogId)
+      setBlogs(blogs.filter(b => b.id !== blogId))
+    } catch (error) {
+      console.error('Error deleting blog:', error)
+    }
+  }
+
   const handleCreate = async (blogObject) => {
 
     if (!blogObject.title || !blogObject.url) {
@@ -115,7 +124,7 @@ const App = () => {
         <BlogForm handleCreate={handleCreate}/>
       </Togglable>
       <div>
-        {blogs.slice().sort((x,y) => y.likes-x.likes).map(blog => <Blog key={blog.id} blog={blog} />)}
+        {blogs.slice().sort((x,y) => y.likes-x.likes).map(blog => <Blog key={blog.id} blog={blog} user={user} handleDelete={handleDelete} />)}
       </div>
     </div>
   )

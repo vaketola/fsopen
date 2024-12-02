@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import blogService from '../services/blogs'
 
-const Blog = ({ blog }) => {
+const Blog = ({ blog, user, handleDelete }) => {
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -32,21 +32,46 @@ const Blog = ({ blog }) => {
     }
   }
 
-  return (
-    <div style={blogStyle}>
-      <div style={hideWhenVisible}>
-        {blog.title} {blog.author} <button onClick={toggleVisibility}>view</button>
-      </div>
-      <div style={showWhenVisible}>
-        <div>
-          {blog.title} {blog.author} <button onClick={toggleVisibility}>hide</button>
+  const onDelete = () => {
+    if (window.confirm(`remove blog ${blog.title} by ${blog.author}?`)) {
+      handleDelete(blog.id)
+    }
+  }
+
+  if (blog.user.id === user) {
+    return (
+      <div style={blogStyle}>
+        <div style={hideWhenVisible}>
+          {blog.title} {blog.author} <button onClick={toggleVisibility}>view</button>
         </div>
-        <div>{blog.url}</div>
-        <div>likes {likes} <button onClick={handleLike}>like</button></div>
-        <div>{blog.user.name}</div>
+        <div style={showWhenVisible}>
+          <div>
+            {blog.title} {blog.author} <button onClick={toggleVisibility}>hide</button>
+          </div>
+          <div>{blog.url}</div>
+          <div>likes {likes} <button onClick={handleLike}>like</button></div>
+          <div>{blog.user.name}</div>
+          <button onClick={onDelete}>remove</button>
+        </div>
       </div>
-    </div>
-  )
+    ) 
+  } else {
+    return (
+      <div style={blogStyle}>
+        <div style={hideWhenVisible}>
+          {blog.title} {blog.author} <button onClick={toggleVisibility}>view</button>
+        </div>
+        <div style={showWhenVisible}>
+          <div>
+            {blog.title} {blog.author} <button onClick={toggleVisibility}>hide</button>
+          </div>
+          <div>{blog.url}</div>
+          <div>likes {likes} <button onClick={handleLike}>like</button></div>
+          <div>{blog.user.name}</div>
+        </div>
+      </div>
+    )
+  }
 }
 
 export default Blog
