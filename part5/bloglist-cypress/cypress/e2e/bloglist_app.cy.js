@@ -104,4 +104,50 @@ describe('Blog app', () => {
       cy.contains('Cypress Test Title').should('not.exist')
     })
   })
+
+  describe('When multiple blogs exist', function() {
+    beforeEach(function() {
+      cy.get('#username').type('cypressuser')
+      cy.get('#password').type('cypresspass')
+      cy.contains('login').click()
+
+      cy.contains('create new').click()
+      cy.get('#title').type('Cypress Test Title 1')
+      cy.get('#author').type('Author Test 1')
+      cy.get('#url').type('https://docs.cypress.io/')
+      cy.get('#createButton').click()
+
+      cy.contains('create new').click()
+      cy.get('#title').type('Cypress Test Title 2')
+      cy.get('#author').type('Author Test 2')
+      cy.get('#url').type('https://docs.cypress.io/')
+      cy.get('#createButton').click()
+
+      cy.contains('create new').click()
+      cy.get('#title').type('Cypress Test Title 3')
+      cy.get('#author').type('Author Test 3')
+      cy.get('#url').type('https://docs.cypress.io/')
+      cy.get('#createButton').click()
+    })
+
+    it('blogs will be sorted by likes', function() {
+      cy.get('.blog').eq(1).find('button').contains('view').click()
+      cy.get('.blog').eq(1).find('button').contains('like').click()
+      cy.contains('likes 1')
+      cy.get('.blog').eq(1).find('button').contains('like').click()
+      cy.contains('likes 2')
+      cy.get('.blog').eq(1).find('button').contains('hide').click()
+
+      cy.get('.blog').eq(2).find('button').contains('view').click()
+      cy.get('.blog').eq(2).find('button').contains('like').click()
+      cy.contains('likes 1')
+      cy.get('.blog').eq(2).find('button').contains('hide').click()
+
+      cy.reload()
+
+      cy.get('.blog').eq(0).should('contain', 'Cypress Test Title 2')
+      cy.get('.blog').eq(1).should('contain', 'Cypress Test Title 3')
+      cy.get('.blog').eq(2).should('contain', 'Cypress Test Title 1')
+    })
+  })
 })

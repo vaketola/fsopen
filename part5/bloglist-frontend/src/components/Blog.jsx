@@ -36,7 +36,7 @@ const Blog = ({ blog, user, handleLike, handleDelete }) => {
 
   if (blog.user.username === user.username) {
     return (
-      <div style={blogStyle}>
+      <div style={blogStyle} className='blog'>
         <div style={hideWhenVisible} className='hideWhenVisible'>
           {blog.title} {blog.author} <button onClick={toggleVisibility}>view</button>
         </div>
@@ -53,7 +53,7 @@ const Blog = ({ blog, user, handleLike, handleDelete }) => {
     )
   } else {
     return (
-      <div style={blogStyle}>
+      <div style={blogStyle} className='blog'>
         <div style={hideWhenVisible} className='hideWhenVisible'>
           {blog.title} {blog.author} <button onClick={toggleVisibility}>view</button>
         </div>
