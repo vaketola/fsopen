@@ -42,10 +42,10 @@ const Blog = ({ blog, user, handleDelete }) => {
   if (blog.user.username === user.username) {
     return (
       <div style={blogStyle}>
-        <div style={hideWhenVisible}>
+        <div style={hideWhenVisible} className='hideWhenVisible'>
           {blog.title} {blog.author} <button onClick={toggleVisibility}>view</button>
         </div>
-        <div style={showWhenVisible}>
+        <div style={showWhenVisible} className='showWhenVisible'>
           <div>
             {blog.title} {blog.author} <button onClick={toggleVisibility}>hide</button>
           </div>
@@ -59,10 +59,10 @@ const Blog = ({ blog, user, handleDelete }) => {
   } else {
     return (
       <div style={blogStyle}>
-        <div style={hideWhenVisible}>
+        <div style={hideWhenVisible} className='hideWhenVisible'>
           {blog.title} {blog.author} <button onClick={toggleVisibility}>view</button>
         </div>
-        <div style={showWhenVisible}>
+        <div style={showWhenVisible} className='showWhenVisible'>
           <div>
             {blog.title} {blog.author} <button onClick={toggleVisibility}>hide</button>
           </div>
@@ -80,7 +80,7 @@ Blog.displayName = 'Blog'
 Blog.propTypes = {
   blog: PropTypes.object.isRequired,
   user: PropTypes.object.isRequired,
-  handleDelete: PropTypes.func.isRequired
+  //handleDelete: PropTypes.func.isRequired
 }
 
 
