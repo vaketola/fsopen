@@ -1,8 +1,7 @@
 import { useState } from 'react'
-import blogService from '../services/blogs'
 import PropTypes from 'prop-types'
 
-const Blog = ({ blog, user, handleDelete }) => {
+const Blog = ({ blog, user, handleLike, handleDelete }) => {
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -20,17 +19,13 @@ const Blog = ({ blog, user, handleDelete }) => {
     setVisible(!visible)
   }
 
-  const handleLike = () => {
+  const onLike = () => {
     const newBlog = {
       ...blog,
       likes: likes + 1,
     }
-    try {
-      blogService.update(blog.id, newBlog)
-      setLikes(likes + 1)
-    } catch (error) {
-      console.error('Error updating likes:', error)
-    }
+    handleLike(blog.id, newBlog)
+    setLikes(likes + 1)
   }
 
   const onDelete = () => {
@@ -50,7 +45,7 @@ const Blog = ({ blog, user, handleDelete }) => {
             {blog.title} {blog.author} <button onClick={toggleVisibility}>hide</button>
           </div>
           <div>{blog.url}</div>
-          <div>likes {likes} <button onClick={handleLike}>like</button></div>
+          <div>likes {likes} <button onClick={onLike}>like</button></div>
           <div>{blog.user.name}</div>
           <button onClick={onDelete}>remove</button>
         </div>
@@ -67,7 +62,7 @@ const Blog = ({ blog, user, handleDelete }) => {
             {blog.title} {blog.author} <button onClick={toggleVisibility}>hide</button>
           </div>
           <div>{blog.url}</div>
-          <div>likes {likes} <button onClick={handleLike}>like</button></div>
+          <div>likes {likes} <button onClick={onLike}>like</button></div>
           <div>{blog.user.name}</div>
         </div>
       </div>

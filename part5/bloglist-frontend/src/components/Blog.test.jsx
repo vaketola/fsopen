@@ -61,3 +61,26 @@ test('url and likes on screen when view clicked', async () => {
   expect(url).toBeVisible()
   expect(likes).toBeVisible()
 })
+
+test('url and likes on screen when view clicked', async () => {
+  const blog = {
+    title: 'Component testing is done with react-testing-library',
+    author: 'Author test text',
+    url: 'testurl.com',
+    likes: 5,
+    user: { username:'mluukkai' }
+  }
+  const user = { username:'mluukkai' }
+  
+  const userMock = userEvent.setup()
+
+  render(<Blog blog={blog} user={user}/>)
+  
+  const viewButton = screen.getByText('view')
+  await userMock.click(viewButton)
+
+  const url = screen.getByText('testurl.com')
+  const likes = screen.getByText('likes 5')
+  expect(url).toBeVisible()
+  expect(likes).toBeVisible()
+})

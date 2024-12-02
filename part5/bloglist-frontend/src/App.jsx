@@ -43,6 +43,14 @@ const App = () => {
     }
   }
 
+  const handleLike = (blogId, blogObject) => {
+    try {
+      blogService.update(blogId, blogObject)
+    } catch (error) {
+      console.error('Error updating likes:', error)
+    }
+  }
+
   const handleDelete = async (blogId) => {
     try {
       blogService.remove(blogId)
@@ -124,7 +132,7 @@ const App = () => {
         <BlogForm handleCreate={handleCreate}/>
       </Togglable>
       <div>
-        {blogs.slice().sort((x,y) => y.likes-x.likes).map(blog => <Blog key={blog.id} blog={blog} user={user} handleDelete={handleDelete} />)}
+        {blogs.slice().sort((x,y) => y.likes-x.likes).map(blog => <Blog key={blog.id} blog={blog} user={user} handleLike={handleLike} handleDelete={handleDelete} />)}
       </div>
     </div>
   )
