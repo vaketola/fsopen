@@ -1,20 +1,29 @@
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import Blog from './Blog'
+import BlogForm from './BlogForm'
 
-test(() => {})
-// test('renders content', async () => {
-//   const createBlog = vi.fn()
-//   const user = userEvent.setup()
+test('renders content', async () => {
+  const functionMock = vi.fn()
+  const user = userEvent.setup()
 
-//   render(<Blog blog={blog} user={user} />)
+  render(<BlogForm handleCreate={functionMock} />)
 
-//   const input = screen.getByRole('textbox')
-//   const sendButton = screen.getByText('save')
+  const createButton = screen.getByText('create new')
 
-//   await user.type(input, 'testing a form...')
-//   await user.click(sendButton)
+  await user.click(createButton)
 
-//   expect(createNote.mock.calls).toHaveLength(1)
-//   expect(createNote.mock.calls[0][0].content).toBe('testing a form...')
-// })
+  const titleInput = screen.getByPlaceholderText('title')
+  const authorInput = screen.getByPlaceholderText('author')
+  const urlInput = screen.getByPlaceholderText('url')
+  const sendButton = screen.getByText('create')
+
+  await user.type(titleInput, 'testing a form1...')
+  await user.type(authorInput, 'testing a form2...')
+  await user.type(urlInput, 'testing a form3...')
+  await user.click(sendButton)
+
+  expect(functionMock.mock.calls).toHaveLength(1)
+  expect(functionMock.mock.calls[0][0].title).toBe('testing a form1...')
+  expect(functionMock.mock.calls[0][0].author).toBe('testing a form2...')
+  expect(functionMock.mock.calls[0][0].url).toBe('testing a form3...')
+})
