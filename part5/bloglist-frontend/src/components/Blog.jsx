@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import blogService from '../services/blogs'
+import PropTypes from 'prop-types'
 
 const Blog = ({ blog, user, handleDelete }) => {
   const blogStyle = {
@@ -38,7 +39,7 @@ const Blog = ({ blog, user, handleDelete }) => {
     }
   }
 
-  if (blog.user.id === user) {
+  if (blog.user.username === user.username) {
     return (
       <div style={blogStyle}>
         <div style={hideWhenVisible}>
@@ -73,5 +74,12 @@ const Blog = ({ blog, user, handleDelete }) => {
     )
   }
 }
+
+Blog.propTypes = {
+  blog: PropTypes.object.isRequired,
+  user: PropTypes.object.isRequired,
+  handleDelete: PropTypes.func.isRequired
+}
+
 
 export default Blog
