@@ -61,8 +61,9 @@ const App = () => {
     }
 
     try {
-      blogService.create(blogObject)
-                 .then(blog => { setBlogs(blogs.concat(blog)) })
+      blogService
+        .create(blogObject)
+        .then(blog => { setBlogs(blogs.concat(blog)) })
       togglableFormRef.current.toggleVisibility()
       setNotificationMessage(`a new blog ${blogObject.title} by ${blogObject.author} was created`)
       setTimeout(() => {setNotificationMessage(null)}, 3000)
@@ -71,13 +72,12 @@ const App = () => {
       setNotificationMessage('failed to create blog')
       setTimeout(() => {setNotificationMessage(null)}, 3000)
     }
-    
   }
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
-      setBlogs( blogs )
-    )  
+      setBlogs(blogs)
+    )
   }, [])
 
   useEffect(() => {

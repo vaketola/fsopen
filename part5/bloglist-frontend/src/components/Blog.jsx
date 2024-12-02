@@ -55,7 +55,7 @@ const Blog = ({ blog, user, handleDelete }) => {
           <button onClick={onDelete}>remove</button>
         </div>
       </div>
-    ) 
+    )
   } else {
     return (
       <div style={blogStyle}>
@@ -74,6 +74,8 @@ const Blog = ({ blog, user, handleDelete }) => {
     )
   }
 }
+
+Blog.displayName = 'Blog'
 
 Blog.propTypes = {
   blog: PropTypes.object.isRequired,
