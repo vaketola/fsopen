@@ -93,5 +93,15 @@ describe('Blog app', () => {
       cy.contains('view').click()
       cy.contains('remove').should('not.exist')
     })
+
+    it('the original user can still delete the blog', function() {
+      cy.contains('logout').click()
+      cy.get('#username').type('cypressuser')
+      cy.get('#password').type('cypresspass')
+      cy.contains('login').click()
+      cy.contains('view').click()
+      cy.contains('remove').click()
+      cy.contains('Cypress Test Title').should('not.exist')
+    })
   })
 })
