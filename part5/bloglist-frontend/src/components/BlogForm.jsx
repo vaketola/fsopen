@@ -18,16 +18,16 @@ const BlogForm = (({ handleCreate }) => {
     <>
       <h2>create new</h2>
       <form onSubmit={createBlog}>
-        <div>title: <input type='text' placeholder='title' value={title} name='title'
+        <div>title: <input type='text' id='title' placeholder='title' value={title} name='title'
           onChange={({ target }) => setTitle(target.value)}
         /></div>
-        <div>author: <input type='text' placeholder='author' value={author} name='author'
+        <div>author: <input type='text' id='author' placeholder='author' value={author} name='author'
           onChange={({ target }) => setAuthor(target.value)}
         /></div>
-        <div>url: <input type='text' placeholder='url' value={url} name='url'
+        <div>url: <input type='text' id='url' placeholder='url' value={url} name='url'
           onChange={({ target }) => setUrl(target.value)}
         /></div>
-        <button>create</button>
+        <button id='createButton'>create</button>
       </form>
     </>
   )

@@ -32,4 +32,22 @@ describe('Blog app', () => {
       cy.contains('wrong login credentials')
     })
   })
+
+  describe('When logged in', function() {
+    beforeEach(function() {
+      cy.get('#username').type('cypressuser')
+      cy.get('#password').type('cypresspass')
+      cy.contains('login').click()
+    })
+
+    it('a blog can be created', function() {
+      cy.contains('create new').click()
+      cy.get('#title').type('Cypress Test Title')
+      cy.get('#author').type('Author Test')
+      cy.get('#url').type('https://docs.cypress.io/')
+      cy.get('#createButton').click()
+      cy.contains('a new blog Cypress Test Title by Author Test was created')
+      cy.contains('Cypress Test Title Author Test')
+    })
+  })
 })
