@@ -50,4 +50,24 @@ describe('Blog app', () => {
       cy.contains('Cypress Test Title Author Test')
     })
   })
+
+  describe('When a blog exists', function() {
+    beforeEach(function() {
+      cy.get('#username').type('cypressuser')
+      cy.get('#password').type('cypresspass')
+      cy.contains('login').click()
+      cy.contains('create new').click()
+      cy.get('#title').type('Cypress Test Title')
+      cy.get('#author').type('Author Test')
+      cy.get('#url').type('https://docs.cypress.io/')
+      cy.get('#createButton').click()
+    })
+
+    it('a blog can be liked', function() {
+      cy.contains('view').click()
+      cy.contains('likes 0')
+      cy.contains('like').click()
+      cy.contains('likes 1')
+    })
+  })
 })
