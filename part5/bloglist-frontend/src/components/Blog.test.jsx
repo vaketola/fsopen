@@ -84,3 +84,27 @@ test('url and likes on screen when view clicked', async () => {
   expect(url).toBeVisible()
   expect(likes).toBeVisible()
 })
+
+test('clicking like twice calls likes function twice', async () => {
+  const blog = {
+    title: 'Component testing is done with react-testing-library',
+    author: 'Author test text',
+    url: 'testurl.com',
+    likes: 5,
+    user: { username:'mluukkai' }
+  }
+  const user = { username:'mluukkai' }
+  
+  const functionMock = vi.fn()
+  const userMock = userEvent.setup()
+
+  render(<Blog blog={blog} user={user} handleLike={functionMock}/>)
+  
+  const viewButton = screen.getByText('view')
+  await userMock.click(viewButton)
+  const likeButton = screen.getByText('like')
+  await userMock.click(likeButton)
+  await userMock.click(likeButton)
+
+  expect(functionMock.mock.calls).toHaveLength(2)
+})
