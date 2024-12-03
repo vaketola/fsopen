@@ -25,9 +25,13 @@ const reducer = (state = initialState, action) => {
     return anecdote
   }
 
-  if (action.type==='VOTE') return state.map(anecdote => voteAnecdote(anecdote, action.id))
-
-  return state
+  switch (action.type) {
+    case 'VOTE':
+      return state.map(anecdote => voteAnecdote(anecdote, action.id))
+    case 'NEW':
+      return [ ...state, action.payload ]
+    default: return state
+  }
 }
 
 export default reducer
