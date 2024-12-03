@@ -11,21 +11,35 @@ const AnecdoteList = () => {
   }
 
   const applyFilter = (anecdote) => {
-    if (anecdote.content.toLowerCase().includes(filter.toLowerCase())) {
-      return (
-        <div key={anecdote.id}>
-          <div>
-            {anecdote.content}
+    if (filter) {
+      if (anecdote.content.toLowerCase().includes(filter.toLowerCase())) {
+        return (
+          <div key={anecdote.id}>
+            <div>
+              {anecdote.content}
+            </div>
+            <div>
+              has {anecdote.votes} <button onClick={() => onVote(anecdote.id)}>
+                vote
+              </button>
+            </div>
           </div>
-          <div>
-            has {anecdote.votes} <button onClick={() => onVote(anecdote.id)}>
-              vote
-            </button>
-          </div>
-        </div>
-      )
+        )
+      }
+      return
     }
-    return
+    return (
+      <div key={anecdote.id}>
+        <div>
+          {anecdote.content}
+        </div>
+        <div>
+          has {anecdote.votes} <button onClick={() => onVote(anecdote.id)}>
+            vote
+          </button>
+        </div>
+      </div>
+    )
   }
 
   return (
