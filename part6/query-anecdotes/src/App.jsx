@@ -1,14 +1,10 @@
 import { useQuery } from '@tanstack/react-query'
-import axios from 'axios'
+import { getAnecdotes } from './requests'
 import AnecdoteForm from './components/AnecdoteForm'
 import Notification from './components/Notification'
 
 const App = () => {
-  const result = useQuery({
-    queryKey: ['anecdotes'],
-    queryFn: () => axios.get('http://localhost:3001/anecdotes')
-      .then(response => response.data)
-  })
+  const result = useQuery({ queryKey: ['anecdotes'], queryFn: getAnecdotes })
   // console.log(JSON.parse(JSON.stringify(result)))
 
   if (result.isLoading) return <div>loading anecdote service</div>
