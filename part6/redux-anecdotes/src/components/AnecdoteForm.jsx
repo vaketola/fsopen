@@ -11,7 +11,7 @@ const AnecdoteForm = () => {
     event.target.anecdote.value = ''
     dispatch(addAnecdote(anecdote))
 
-    dispatch(showNotification('Note added!'))
+    dispatch(showNotification(`added anecdote "${anecdote}"`))
     setTimeout(() => dispatch(hideNotification()), 5000)
   }
 
