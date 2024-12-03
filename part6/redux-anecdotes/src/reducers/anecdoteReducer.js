@@ -50,4 +50,4 @@ const reducer = (state = initialState, action) => {
 }
 
 export default reducer
-export {voteAnecdote, addAnecdote}
+export { voteAnecdote, addAnecdote }
