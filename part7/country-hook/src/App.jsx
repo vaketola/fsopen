@@ -21,13 +21,28 @@ const useCountry = (name) => {
   const baseUrl = 'https://studies.cs.helsinki.fi/restcountries/api'
 
   useEffect(() => {
-    axios
-      .get(`${baseUrl}/name/${name}`)
-      .then(countryInfo => setCountry({ found:true, data:countryInfo.data }))
-      .catch(e => setCountry(null))
+    if (!name) return
+
+    const fetchCountry = async () => {
+      try {
+        const result = await axios.get(`${baseUrl}/name/${name}`)
+        setCountry({
+          found: true, 
+          data: {
+            name: result.data.name.common,
+            capital: result.data.capital[0],
+            population: result.data.population,
+            flag: result.data.flags.png
+          }
+        })
+      } catch (error) {
+        setCountry({ found: false, data: null })
+      }
+    }
+
+    fetchCountry()
   }, [name])
 
-  console.log(country)
   return country
 }
 
