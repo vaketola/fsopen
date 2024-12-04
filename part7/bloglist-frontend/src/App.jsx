@@ -2,12 +2,11 @@ import { useState, useEffect, useRef, useContext } from "react";
 import Blog from "./components/Blog";
 import BlogForm from "./components/BlogForm";
 import Togglable from "./components/Togglable";
-import Notification from './components/Notification';
-import NotificationContext from './NotificationContext';
+import Notification from "./components/Notification";
+import NotificationContext from "./NotificationContext";
 import blogService from "./services/blogs";
 import loginService from "./services/login";
 import "./styles.css";
-
 
 const App = () => {
   const [user, setUser] = useState(null);
@@ -30,9 +29,13 @@ const App = () => {
       setUsername("");
       setPassword("");
     } catch (exception) {
-      // error type
-      dispatch({ type:'ON', payload:'wrong login credentials' })
-      setTimeout(() => { dispatch({ type:"OFF" }) }, 5000)
+      dispatch({
+        type: "ON",
+        payload: { message: "wrong login credentials", type: "error" },
+      });
+      setTimeout(() => {
+        dispatch({ type: "OFF" });
+      }, 5000);
     }
   };
 
@@ -55,9 +58,13 @@ const App = () => {
 
   const handleCreate = async (blogObject) => {
     if (!blogObject.title || !blogObject.url) {
-      // error type
-      dispatch({ type:'ON', payload:'title and url are required' })
-      setTimeout(() => { dispatch({ type:"OFF" }) }, 5000)
+      dispatch({
+        type: "ON",
+        payload: { message: "title and url are required", type: "error" },
+      });
+      setTimeout(() => {
+        dispatch({ type: "OFF" });
+      }, 5000);
       return;
     }
 
@@ -66,14 +73,25 @@ const App = () => {
         setBlogs(blogs.concat(blog));
       });
       togglableFormRef.current.toggleVisibility();
-      // success type
-      dispatch({ type:'ON', payload:`a new blog ${blogObject.title} by ${blogObject.author} was created` })
-      setTimeout(() => { dispatch({ type:"OFF" }) }, 5000)
+      dispatch({
+        type: "ON",
+        payload: {
+          message: `a new blog ${blogObject.title} by ${blogObject.author} was created`,
+          type: "success",
+        },
+      });
+      setTimeout(() => {
+        dispatch({ type: "OFF" });
+      }, 5000);
     } catch (exception) {
       console.log(exception);
-      // error type
-      dispatch({ type:'ON', payload:"failed to create blog" })
-      setTimeout(() => { dispatch({ type:"OFF" }) }, 5000)
+      dispatch({
+        type: "ON",
+        payload: { message: "failed to create blog", type: "error" },
+      });
+      setTimeout(() => {
+        dispatch({ type: "OFF" });
+      }, 5000);
     }
   };
 

@@ -5,7 +5,7 @@ const notificationReducer = (state, action) => {
     case "OFF":
       return "";
     case "ON":
-      return action.payload;
+      return { message: action.payload.message, type: action.payload.type };
     default:
       return state;
   }
