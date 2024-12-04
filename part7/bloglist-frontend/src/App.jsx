@@ -1,17 +1,13 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useContext } from "react";
 import Blog from "./components/Blog";
 import BlogForm from "./components/BlogForm";
 import Togglable from "./components/Togglable";
+import Notification from './components/Notification';
+import NotificationContext from './NotificationContext';
 import blogService from "./services/blogs";
 import loginService from "./services/login";
 import "./styles.css";
 
-const Notification = ({ message }) => {
-  if (message === null) {
-    return null;
-  }
-  return <div className="notification">{message}</div>;
-};
 
 const App = () => {
   const [user, setUser] = useState(null);
@@ -19,7 +15,7 @@ const App = () => {
   const [password, setPassword] = useState("");
   const [blogs, setBlogs] = useState([]);
 
-  const [notificationMessage, setNotificationMessage] = useState(null);
+  const [notification, dispatch] = useContext(NotificationContext);
 
   const togglableFormRef = useRef();
 
@@ -34,10 +30,7 @@ const App = () => {
       setUsername("");
       setPassword("");
     } catch (exception) {
-      setNotificationMessage("wrong login credentials");
-      setTimeout(() => {
-        setNotificationMessage(null);
-      }, 3000);
+      // error notification "wrong login credentials"
     }
   };
 
@@ -60,10 +53,7 @@ const App = () => {
 
   const handleCreate = async (blogObject) => {
     if (!blogObject.title || !blogObject.url) {
-      setNotificationMessage("title and url are required");
-      setTimeout(() => {
-        setNotificationMessage(null);
-      }, 3000);
+      // error notification "title and url are required"
       return;
     }
 
@@ -72,18 +62,10 @@ const App = () => {
         setBlogs(blogs.concat(blog));
       });
       togglableFormRef.current.toggleVisibility();
-      setNotificationMessage(
-        `a new blog ${blogObject.title} by ${blogObject.author} was created`,
-      );
-      setTimeout(() => {
-        setNotificationMessage(null);
-      }, 3000);
+      // success notification `a new blog ${blogObject.title} by ${blogObject.author} was created`
     } catch (exception) {
       console.log(exception);
-      setNotificationMessage("failed to create blog");
-      setTimeout(() => {
-        setNotificationMessage(null);
-      }, 3000);
+      // error notification "failed to create blog"
     }
   };
 
@@ -103,7 +85,7 @@ const App = () => {
     return (
       <div>
         <h2>blogs</h2>
-        <Notification message={notificationMessage} />
+        <Notification />
         <form onSubmit={handleLogin}>
           <div>
             username{" "}
@@ -133,7 +115,7 @@ const App = () => {
   return (
     <div>
       <h2>blogs</h2>
-      <Notification message={notificationMessage} />
+      <Notification />
       <div>{user.name} logged in</div>
       <button
         onClick={() => {
