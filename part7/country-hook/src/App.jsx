@@ -18,7 +18,18 @@ const useField = (type) => {
 const useCountry = (name) => {
   const [country, setCountry] = useState(null)
 
-  useEffect(() => {})
+  const baseUrl = 'https://studies.cs.helsinki.fi/restcountries/api'
+
+  const fetchCountry = async () => {
+    const countryInfo = await axios.get(`${baseUrl}/name/${name}`)
+    if (countryInfo) return countryInfo.data
+    return null
+  }
+
+  useEffect(() => {
+    if (!name) return 
+    setCountry(fetchCountry())
+  }, [name])
 
   return country
 }
