@@ -27,8 +27,11 @@ const useCountry = (name) => {
   }
 
   useEffect(() => {
-    if (!name) return 
-    setCountry(fetchCountry())
+    if (!name) return
+    const countryData = fetchCountry()
+    if (!countryData) return setCountry({ found: false, data: null })
+    console.log(countryData)
+    setCountry({ found: true, data: countryData })
   }, [name])
 
   return country
