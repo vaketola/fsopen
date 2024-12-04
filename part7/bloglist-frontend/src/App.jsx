@@ -30,7 +30,9 @@ const App = () => {
       setUsername("");
       setPassword("");
     } catch (exception) {
-      // error notification "wrong login credentials"
+      // error type
+      dispatch({ type:'ON', payload:'wrong login credentials' })
+      setTimeout(() => { dispatch({ type:"OFF" }) }, 5000)
     }
   };
 
@@ -53,7 +55,9 @@ const App = () => {
 
   const handleCreate = async (blogObject) => {
     if (!blogObject.title || !blogObject.url) {
-      // error notification "title and url are required"
+      // error type
+      dispatch({ type:'ON', payload:'title and url are required' })
+      setTimeout(() => { dispatch({ type:"OFF" }) }, 5000)
       return;
     }
 
@@ -62,10 +66,14 @@ const App = () => {
         setBlogs(blogs.concat(blog));
       });
       togglableFormRef.current.toggleVisibility();
-      // success notification `a new blog ${blogObject.title} by ${blogObject.author} was created`
+      // success type
+      dispatch({ type:'ON', payload:`a new blog ${blogObject.title} by ${blogObject.author} was created` })
+      setTimeout(() => { dispatch({ type:"OFF" }) }, 5000)
     } catch (exception) {
       console.log(exception);
-      // error notification "failed to create blog"
+      // error type
+      dispatch({ type:'ON', payload:"failed to create blog" })
+      setTimeout(() => { dispatch({ type:"OFF" }) }, 5000)
     }
   };
 
