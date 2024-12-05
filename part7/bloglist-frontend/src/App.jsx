@@ -239,7 +239,10 @@ const App = () => {
           path="/users/:id"
           element={<IndividualUser users={userData} />}
         />
-        <Route path="/blogs/:id" element={<IndividualBlog blogs={data} handleLike={handleLike} />} />
+        <Route
+          path="/blogs/:id"
+          element={<IndividualBlog blogs={data} handleLike={handleLike} />}
+        />
       </Routes>
     </Router>
   );
