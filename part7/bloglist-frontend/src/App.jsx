@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useContext } from "react";
 import Blog from "./components/Blog";
 import BlogForm from "./components/BlogForm";
 import Togglable from "./components/Togglable";
+import UserInformation from "./components/UserInformation";
 import Notification from "./components/Notification";
 import NotificationContext from "./NotificationContext";
 import UserContext from "./UserContext";
@@ -202,6 +203,7 @@ const App = () => {
             />
           ))}
       </div>
+      <UserInformation />
     </div>
   );
 };

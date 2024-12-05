@@ -22,5 +22,12 @@ export const deleteBlog = (blogId) => {
 };
 
 export const updateBlog = (newBlog) => {
-  axios.put(`${baseUrl}/${newBlog.id}`, newBlog).then((response) => response.data);
+  axios
+    .put(`${baseUrl}/${newBlog.id}`, newBlog)
+    .then((response) => response.data);
+};
+
+export const getUsers = () => {
+  const request = axios.get("/api/users");
+  return request.then((response) => response.data);
 };
