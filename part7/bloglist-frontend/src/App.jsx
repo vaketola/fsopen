@@ -4,11 +4,10 @@ import BlogForm from "./components/BlogForm";
 import Togglable from "./components/Togglable";
 import Notification from "./components/Notification";
 import NotificationContext from "./NotificationContext";
-import blogService from "./services/blogs";
 import loginService from "./services/login";
 import "./styles.css";
-import { useQuery } from "@tanstack/react-query";
-import { getBlogs } from "./requests";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import { getBlogs, createBlog, deleteBlog, updateBlog } from "./requests";
 
 const App = () => {
   const [user, setUser] = useState(null);
@@ -17,6 +16,9 @@ const App = () => {
   const [blogs, setBlogs] = useState([]);
 
   const [notification, dispatch] = useContext(NotificationContext);
+  const newBlogMutation = useMutation({ mutationFn: createBlog });
+  const deleteBlogMutation = useMutation({ mutationFn: deleteBlog });
+  const updateBlogMutation = useMutation({ mutationFn: updateBlog });
 
   const togglableFormRef = useRef();
 
@@ -26,7 +28,14 @@ const App = () => {
     try {
       const user = await loginService.login({ username, password });
       window.localStorage.setItem("loggedBlogAppUser", JSON.stringify(user));
-      blogService.setToken(user.token);
+
+      // I know this is not great
+      const token = `Bearer ${user.token}`;
+      window.localStorage.setItem(
+        "loggedBlogAppUserToken",
+        JSON.stringify(token),
+      );
+
       setUser(user);
       setUsername("");
       setPassword("");
@@ -43,7 +52,7 @@ const App = () => {
 
   const handleLike = (blogId, blogObject) => {
     try {
-      blogService.update(blogId, blogObject);
+      updateBlogMutation.mutate(blogId, blogObject);
     } catch (error) {
       console.error("Error updating likes:", error);
     }
@@ -51,7 +60,7 @@ const App = () => {
 
   const handleDelete = async (blogId) => {
     try {
-      blogService.remove(blogId);
+      deleteBlogMutation.mutate(blogId);
       setBlogs(blogs.filter((b) => b.id !== blogId));
     } catch (error) {
       console.error("Error deleting blog:", error);
@@ -71,10 +80,11 @@ const App = () => {
     }
 
     try {
-      blogService.create(blogObject).then((blog) => {
-        setBlogs(blogs.concat(blog));
-      });
+      newBlogMutation.mutate(blogObject);
+      setBlogs(blogs.concat(blogObject));
+
       togglableFormRef.current.toggleVisibility();
+
       dispatch({
         type: "ON",
         payload: {
@@ -86,7 +96,7 @@ const App = () => {
         dispatch({ type: "OFF" });
       }, 5000);
     } catch (exception) {
-      console.log(exception);
+      // console.log(exception);
       dispatch({
         type: "ON",
         payload: { message: "failed to create blog", type: "error" },
