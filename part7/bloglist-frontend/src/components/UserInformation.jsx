@@ -38,11 +38,11 @@ export const UserInformation = () => {
   return (
     <>
       <h2>Users</h2>
-      <table>
+      <table className="table table-sm">
         <thead>
           <tr>
-            <th style={leftAlignStyle}></th>
-            <th style={leftAlignStyle}>blogs created</th>
+            <th>user name</th>
+            <th>blogs created</th>
           </tr>
         </thead>
         <tbody>
