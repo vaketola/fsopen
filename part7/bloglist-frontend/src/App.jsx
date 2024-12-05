@@ -13,14 +13,19 @@ const App = () => {
   const [user, setUser] = useState(null);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [blogs, setBlogs] = useState([]);
 
   const [notification, dispatch] = useContext(NotificationContext);
-  const newBlogMutation = useMutation({ mutationFn: createBlog });
-  const deleteBlogMutation = useMutation({ mutationFn: deleteBlog });
-  const updateBlogMutation = useMutation({ mutationFn: updateBlog });
 
   const togglableFormRef = useRef();
+
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["blogs"],
+    queryFn: getBlogs,
+  });
+
+  const deleteBlogMutation = useMutation({ mutationFn: deleteBlog });
+  const updateBlogMutation = useMutation({ mutationFn: updateBlog });
+  const newBlogMutation = useMutation({ mutationFn: createBlog });
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -50,9 +55,9 @@ const App = () => {
     }
   };
 
-  const handleLike = (blogId, blogObject) => {
+  const handleLike = (blogObject) => {
     try {
-      updateBlogMutation.mutate(blogId, blogObject);
+      updateBlogMutation.mutate(blogObject);
     } catch (error) {
       console.error("Error updating likes:", error);
     }
@@ -61,7 +66,6 @@ const App = () => {
   const handleDelete = async (blogId) => {
     try {
       deleteBlogMutation.mutate(blogId);
-      setBlogs(blogs.filter((b) => b.id !== blogId));
     } catch (error) {
       console.error("Error deleting blog:", error);
     }
@@ -81,7 +85,6 @@ const App = () => {
 
     try {
       newBlogMutation.mutate(blogObject);
-      setBlogs(blogs.concat(blogObject));
 
       togglableFormRef.current.toggleVisibility();
 
@@ -95,11 +98,14 @@ const App = () => {
       setTimeout(() => {
         dispatch({ type: "OFF" });
       }, 5000);
-    } catch (exception) {
-      // console.log(exception);
+    } catch (error) {
+      console.error("Error creating blog:", error);
       dispatch({
         type: "ON",
-        payload: { message: "failed to create blog", type: "error" },
+        payload: {
+          message: "failed to create blog",
+          type: "error",
+        },
       });
       setTimeout(() => {
         dispatch({ type: "OFF" });
@@ -114,15 +120,6 @@ const App = () => {
       setUser(user);
     }
   }, []);
-
-  const { data, isLoading, isError } = useQuery({
-    queryKey: ["blogs"],
-    queryFn: getBlogs,
-  });
-
-  useEffect(() => {
-    if (data) setBlogs(data);
-  }, [data]);
 
   if (isLoading) return <div>loading blogs...</div>;
   if (isError) return <div>server error</div>;
@@ -176,7 +173,7 @@ const App = () => {
         <BlogForm handleCreate={handleCreate} />
       </Togglable>
       <div>
-        {blogs
+        {data
           .slice()
           .sort((x, y) => y.likes - x.likes)
           .map((blog) => (

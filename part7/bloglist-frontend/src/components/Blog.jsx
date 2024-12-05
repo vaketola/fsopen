@@ -24,7 +24,7 @@ const Blog = ({ blog, user, handleLike, handleDelete }) => {
       ...blog,
       likes: likes + 1,
     };
-    handleLike(blog.id, newBlog);
+    handleLike(newBlog);
     setLikes(likes + 1);
   };
 

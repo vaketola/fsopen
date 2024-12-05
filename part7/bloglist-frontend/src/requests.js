@@ -21,6 +21,6 @@ export const deleteBlog = (blogId) => {
     .then((response) => response.data);
 };
 
-export const updateBlog = (blogId, newBlog) => {
-  axios.put(`${baseUrl}/${blogId}`, newBlog).then((response) => response.data);
+export const updateBlog = (newBlog) => {
+  axios.put(`${baseUrl}/${newBlog.id}`, newBlog).then((response) => response.data);
 };
