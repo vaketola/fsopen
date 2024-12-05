@@ -18,13 +18,10 @@ import {
   addComment,
 } from "./requests";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
-import { Table } from "react-bootstrap";
+import { Table, Form, Button } from "react-bootstrap";
 
 const App = () => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-
-  const [notification, dispatch] = useContext(NotificationContext);
+  const [notification, notificationDispatch] = useContext(NotificationContext);
   const [user, userDispatch] = useContext(UserContext);
 
   const togglableFormRef = useRef();
@@ -63,6 +60,9 @@ const App = () => {
   const handleLogin = async (event) => {
     event.preventDefault();
 
+    const username = event.target.username.value;
+    const password = event.target.password.value;
+
     try {
       const user = await loginService.login({ username, password });
       window.localStorage.setItem("loggedBlogAppUser", JSON.stringify(user));
@@ -76,15 +76,23 @@ const App = () => {
 
       userDispatch({ type: "LOGIN", payload: user });
 
-      setUsername("");
-      setPassword("");
-    } catch (exception) {
-      dispatch({
+      notificationDispatch({
         type: "ON",
-        payload: { message: "wrong login credentials", type: "error" },
+        payload: {
+          message: `welcome ${user.name}`,
+          type: "success",
+        },
       });
       setTimeout(() => {
-        dispatch({ type: "OFF" });
+        notificationDispatch({ type: "OFF" });
+      }, 5000);
+    } catch (exception) {
+      notificationDispatch({
+        type: "ON",
+        payload: { message: "wrong login credentials", type: "warning" },
+      });
+      setTimeout(() => {
+        notificationDispatch({ type: "OFF" });
       }, 5000);
     }
   };
@@ -115,12 +123,12 @@ const App = () => {
 
   const handleCreate = async (blogObject) => {
     if (!blogObject.title || !blogObject.url) {
-      dispatch({
+      notificationDispatch({
         type: "ON",
-        payload: { message: "title and url are required", type: "error" },
+        payload: { message: "title and url are required", type: "warning" },
       });
       setTimeout(() => {
-        dispatch({ type: "OFF" });
+        notificationDispatch({ type: "OFF" });
       }, 5000);
       return;
     }
@@ -130,7 +138,7 @@ const App = () => {
 
       togglableFormRef.current.toggleVisibility();
 
-      dispatch({
+      notificationDispatch({
         type: "ON",
         payload: {
           message: `a new blog ${blogObject.title} by ${blogObject.author} was created`,
@@ -138,19 +146,19 @@ const App = () => {
         },
       });
       setTimeout(() => {
-        dispatch({ type: "OFF" });
+        notificationDispatch({ type: "OFF" });
       }, 5000);
     } catch (error) {
       console.error("Error creating blog:", error);
-      dispatch({
+      notificationDispatch({
         type: "ON",
         payload: {
           message: "failed to create blog",
-          type: "error",
+          type: "warning",
         },
       });
       setTimeout(() => {
-        dispatch({ type: "OFF" });
+        notificationDispatch({ type: "OFF" });
       }, 5000);
     }
   };
@@ -169,37 +177,28 @@ const App = () => {
   if (user === null) {
     return (
       <div className="container">
-        <h2>blogs</h2>
         <Notification />
-        <form onSubmit={handleLogin}>
-          <div>
-            username{" "}
-            <input
-              type="text"
-              id="username"
-              value={username}
-              name="username"
-              onChange={({ target }) => setUsername(target.value)}
-            />
-          </div>
-          <div>
-            password{" "}
-            <input
-              type="text"
-              id="password"
-              value={password}
-              name="password"
-              onChange={({ target }) => setPassword(target.value)}
-            />
-          </div>
-          <button>login</button>
-        </form>
+        <h2>blogs</h2>
+        <Form onSubmit={handleLogin}>
+          <Form.Group>
+            <Form.Label>username:</Form.Label>
+            <Form.Control type="text" name="username" />
+          </Form.Group>
+          <Form.Group>
+            <Form.Label>password:</Form.Label>
+            <Form.Control type="text" name="password" />
+          </Form.Group>
+          <Button variant="primary" type="submit">
+            login
+          </Button>
+        </Form>
       </div>
     );
   }
   return (
     <div className="container">
       <Router>
+        <Notification />
         <div style={{ backgroundColor: "lightgray", padding: "5px" }}>
           <Link style={padding} to="/">
             blogs
@@ -219,7 +218,6 @@ const App = () => {
           </button>
         </div>
         <h2>blogs</h2>
-        <Notification />
 
         <Routes>
           <Route
