@@ -24,7 +24,7 @@ export const IndividualBlog = ({ blogs, handleLike }) => {
       <h2>
         {blog.title} {blog.author}
       </h2>
-      <div>{blog.url}</div>
+      <a href={blog.url}>{blog.url}</a>
       <div>
         {likes} likes <button onClick={onLike}>like</button>
       </div>

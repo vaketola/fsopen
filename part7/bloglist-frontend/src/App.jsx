@@ -188,26 +188,26 @@ const App = () => {
   }
   return (
     <Router>
-      <div>
+      <div style={{ backgroundColor: "lightgray", padding: "5px" }}>
         <Link style={padding} to="/">
           blogs
         </Link>
         <Link style={padding} to="/users">
           users
         </Link>
+        {user.name} logged in{" "}
+        <button
+          onClick={() => {
+            window.localStorage.removeItem("loggedBlogAppUser");
+            window.localStorage.removeItem("loggedBlogAppUserToken");
+            userDispatch({ type: "LOGOUT" });
+          }}
+        >
+          logout
+        </button>
       </div>
       <h2>blogs</h2>
       <Notification />
-      <div>{user.name} logged in</div>
-      <button
-        onClick={() => {
-          window.localStorage.removeItem("loggedBlogAppUser");
-          window.localStorage.removeItem("loggedBlogAppUserToken");
-          userDispatch({ type: "LOGOUT" });
-        }}
-      >
-        logout
-      </button>
 
       <Routes>
         <Route
