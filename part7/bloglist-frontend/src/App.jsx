@@ -10,6 +10,7 @@ import loginService from "./services/login";
 import "./styles.css";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getBlogs, createBlog, deleteBlog, updateBlog } from "./requests";
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 
 const App = () => {
   const [username, setUsername] = useState("");
@@ -42,6 +43,8 @@ const App = () => {
       refetch();
     },
   });
+
+  const padding = { padding: 5 };
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -173,7 +176,11 @@ const App = () => {
     );
   }
   return (
-    <div>
+    <Router>
+      <div>
+        <Link style={padding} to="/">blogs</Link>
+        <Link style={padding} to="/users">users</Link>
+      </div>
       <h2>blogs</h2>
       <Notification />
       <div>{user.name} logged in</div>
@@ -186,25 +193,32 @@ const App = () => {
       >
         logout
       </button>
-      <Togglable buttonLabel="create new" ref={togglableFormRef}>
-        <BlogForm handleCreate={handleCreate} />
-      </Togglable>
-      <div>
-        {data
-          .slice()
-          .sort((x, y) => y.likes - x.likes)
-          .map((blog) => (
-            <Blog
-              key={blog.id}
-              blog={blog}
-              user={user}
-              handleLike={handleLike}
-              handleDelete={handleDelete}
-            />
-          ))}
-      </div>
-      <UserInformation />
-    </div>
+
+      <Routes>
+        <Route path="/" element={
+          <>
+            <Togglable buttonLabel="create new" ref={togglableFormRef}>
+              <BlogForm handleCreate={handleCreate} />
+            </Togglable>
+            <div>
+              {data
+                .slice()
+                .sort((x, y) => y.likes - x.likes)
+                .map((blog) => (
+                  <Blog
+                    key={blog.id}
+                    blog={blog}
+                    user={user}
+                    handleLike={handleLike}
+                    handleDelete={handleDelete}
+                  />
+                ))}
+            </div>
+          </>
+        } />
+        <Route path="/users" element={<UserInformation />} />
+      </Routes>
+    </Router>
   );
 };
 
