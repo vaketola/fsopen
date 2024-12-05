@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Table, Form } from "react-bootstrap";
 import styled from "styled-components";
 
 const Button = styled.button`
@@ -24,42 +25,64 @@ const BlogForm = ({ handleCreate }) => {
   return (
     <>
       <h2>create new</h2>
-      <form onSubmit={createBlog}>
-        <div>
-          title:{" "}
-          <input
-            type="text"
-            id="title"
-            placeholder="title"
-            value={title}
-            name="title"
-            onChange={({ target }) => setTitle(target.value)}
-          />
-        </div>
-        <div>
-          author:{" "}
-          <input
-            type="text"
-            id="author"
-            placeholder="author"
-            value={author}
-            name="author"
-            onChange={({ target }) => setAuthor(target.value)}
-          />
-        </div>
-        <div>
-          url:{" "}
-          <input
-            type="text"
-            id="url"
-            placeholder="url"
-            value={url}
-            name="url"
-            onChange={({ target }) => setUrl(target.value)}
-          />
-        </div>
-        <Button id="createButton">create</Button>
-      </form>
+      <Form onSubmit={createBlog}>
+        <Table>
+          <tbody>
+            <tr>
+              <td>
+                <Form.Label>title:</Form.Label>
+              </td>
+              <td>
+                <Form.Control
+                  type="text"
+                  id="title"
+                  placeholder="title"
+                  value={title}
+                  name="title"
+                  onChange={({ target }) => setTitle(target.value)}
+                />
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <Form.Label>author:</Form.Label>
+              </td>
+              <td>
+                <Form.Control
+                  type="text"
+                  id="author"
+                  placeholder="name"
+                  value={author}
+                  name="author"
+                  onChange={({ target }) => setAuthor(target.value)}
+                />
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <Form.Label>url:</Form.Label>
+              </td>
+              <td>
+                <Form.Control
+                  type="text"
+                  id="url"
+                  placeholder="url"
+                  value={url}
+                  name="url"
+                  onChange={({ target }) => setUrl(target.value)}
+                />
+              </td>
+            </tr>
+            <tr>
+              <td colSpan="2">
+                <Button id="createButton" type="submit" variant="primary">
+                  Create
+                </Button>
+              </td>
+            </tr>
+          </tbody>
+        </Table>
+      </Form>
     </>
   );
 };
