@@ -6,7 +6,7 @@ import Notification from "./components/Notification";
 import NotificationContext from "./NotificationContext";
 import loginService from "./services/login";
 import "./styles.css";
-import { useQuery, useMutation } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getBlogs, createBlog, deleteBlog, updateBlog } from "./requests";
 
 const App = () => {
@@ -18,14 +18,28 @@ const App = () => {
 
   const togglableFormRef = useRef();
 
-  const { data, isLoading, isError } = useQuery({
+  const queryClient = useQueryClient();
+
+  const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ["blogs"],
     queryFn: getBlogs,
   });
 
-  const deleteBlogMutation = useMutation({ mutationFn: deleteBlog });
+  const deleteBlogMutation = useMutation({
+    mutationFn: deleteBlog,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["blogs"] });
+      refetch();
+    },
+  });
   const updateBlogMutation = useMutation({ mutationFn: updateBlog });
-  const newBlogMutation = useMutation({ mutationFn: createBlog });
+  const newBlogMutation = useMutation({
+    mutationFn: createBlog,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["blogs"] });
+      refetch();
+    },
+  });
 
   const handleLogin = async (event) => {
     event.preventDefault();
