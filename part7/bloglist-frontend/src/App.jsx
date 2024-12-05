@@ -18,6 +18,7 @@ import {
   addComment,
 } from "./requests";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import { Table } from "react-bootstrap";
 
 const App = () => {
   const [username, setUsername] = useState("");
@@ -167,7 +168,7 @@ const App = () => {
 
   if (user === null) {
     return (
-      <div>
+      <div className="container">
         <h2>blogs</h2>
         <Notification />
         <form onSubmit={handleLogin}>
@@ -197,69 +198,77 @@ const App = () => {
     );
   }
   return (
-    <Router>
-      <div style={{ backgroundColor: "lightgray", padding: "5px" }}>
-        <Link style={padding} to="/">
-          blogs
-        </Link>
-        <Link style={padding} to="/users">
-          users
-        </Link>
-        {user.name} logged in{" "}
-        <button
-          onClick={() => {
-            window.localStorage.removeItem("loggedBlogAppUser");
-            window.localStorage.removeItem("loggedBlogAppUserToken");
-            userDispatch({ type: "LOGOUT" });
-          }}
-        >
-          logout
-        </button>
-      </div>
-      <h2>blogs</h2>
-      <Notification />
+    <div className="container">
+      <Router>
+        <div style={{ backgroundColor: "lightgray", padding: "5px" }}>
+          <Link style={padding} to="/">
+            blogs
+          </Link>
+          <Link style={padding} to="/users">
+            users
+          </Link>
+          {user.name} logged in{" "}
+          <button
+            onClick={() => {
+              window.localStorage.removeItem("loggedBlogAppUser");
+              window.localStorage.removeItem("loggedBlogAppUserToken");
+              userDispatch({ type: "LOGOUT" });
+            }}
+          >
+            logout
+          </button>
+        </div>
+        <h2>blogs</h2>
+        <Notification />
 
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <>
-              <Togglable buttonLabel="create new" ref={togglableFormRef}>
-                <BlogForm handleCreate={handleCreate} />
-              </Togglable>
-              <div>
-                {data
-                  .slice()
-                  .sort((x, y) => y.likes - x.likes)
-                  .map((blog) => (
-                    <Blog
-                      key={blog.id}
-                      blog={blog}
-                      user={user}
-                      handleDelete={handleDelete}
-                    />
-                  ))}
-              </div>
-            </>
-          }
-        />
-        <Route path="/users" element={<UserInformation />} />
-        <Route
-          path="/users/:id"
-          element={<IndividualUser users={userData} />}
-        />
-        <Route
-          path="/blogs/:id"
-          element={
-            <IndividualBlog
-              blogs={data}
-              handleLike={handleLike}
-              handleComment={handleComment}
-            />
-          }
-        />
-      </Routes>
-    </Router>
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <>
+                <Togglable buttonLabel="create new" ref={togglableFormRef}>
+                  <BlogForm handleCreate={handleCreate} />
+                </Togglable>
+                <div>
+                  <Table striped>
+                    <tbody>
+                      {data
+                        .slice()
+                        .sort((x, y) => y.likes - x.likes)
+                        .map((blog) => (
+                          <tr key={blog.id}>
+                            <Blog
+                              key={blog.id}
+                              blog={blog}
+                              user={user}
+                              handleDelete={handleDelete}
+                            />
+                          </tr>
+                        ))}
+                    </tbody>
+                  </Table>
+                </div>
+              </>
+            }
+          />
+          <Route path="/users" element={<UserInformation />} />
+          <Route
+            path="/users/:id"
+            element={<IndividualUser users={userData} />}
+          />
+          <Route
+            path="/blogs/:id"
+            element={
+              <IndividualBlog
+                blogs={data}
+                handleLike={handleLike}
+                handleComment={handleComment}
+              />
+            }
+          />
+        </Routes>
+      </Router>
+    </div>
   );
 };
 

@@ -58,40 +58,22 @@ export const IndividualBlog = ({ blogs, handleLike, handleComment }) => {
 };
 
 export const Blog = ({ blog, user, handleDelete }) => {
-  const blogStyle = {
-    paddingTop: 10,
-    paddingLeft: 2,
-    border: "solid",
-    borderWidth: 1,
-    marginBottom: 5,
-  };
-
   const onDelete = () => {
     if (window.confirm(`remove blog ${blog.title} by ${blog.author}?`)) {
       handleDelete(blog.id);
     }
   };
 
-  if (blog.user.username === user.username) {
-    return (
-      <div style={blogStyle} className="blog">
-        <div>
-          <Link to={`/blogs/${blog.id}`}>
-            {blog.title} {blog.author}
-          </Link>{" "}
-          <button onClick={onDelete}>remove</button>
-        </div>
-      </div>
-    );
-  } else {
-    return (
-      <div style={blogStyle} className="blog">
-        <Link to={`/blogs/${blog.id}`}>
-          {blog.title} {blog.author}
-        </Link>
-      </div>
-    );
-  }
+  return (
+    <td className="blog">
+      <Link to={`/blogs/${blog.id}`}>
+        {blog.title} {blog.author}
+      </Link>{" "}
+      {blog.user.username === user.username ? (
+        <button onClick={onDelete}>remove</button>
+      ) : null}
+    </td>
+  );
 };
 
 Blog.displayName = "Blog";
