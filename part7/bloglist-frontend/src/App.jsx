@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useContext } from "react";
-import Blog from "./components/Blog";
+import { Blog, IndividualBlog } from "./components/Blog";
 import BlogForm from "./components/BlogForm";
 import Togglable from "./components/Togglable";
 import { UserInformation, IndividualUser } from "./components/UserInformation";
@@ -239,6 +239,7 @@ const App = () => {
           path="/users/:id"
           element={<IndividualUser users={userData} />}
         />
+        <Route path="/blogs/:id" element={<IndividualBlog blogs={data} handleLike={handleLike} />} />
       </Routes>
     </Router>
   );

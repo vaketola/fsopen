@@ -1,23 +1,12 @@
 import { useState } from "react";
 import PropTypes from "prop-types";
+import { Link, useParams } from "react-router-dom";
 
-const Blog = ({ blog, user, handleLike, handleDelete }) => {
-  const blogStyle = {
-    paddingTop: 10,
-    paddingLeft: 2,
-    border: "solid",
-    borderWidth: 1,
-    marginBottom: 5,
-  };
+export const IndividualBlog = ({ blogs, handleLike }) => {
+  const id = useParams().id;
+  const blog = blogs.find((b) => b.id === id);
 
-  const [visible, setVisible] = useState(false);
   const [likes, setLikes] = useState(blog.likes);
-  const hideWhenVisible = { display: visible ? "none" : "" };
-  const showWhenVisible = { display: visible ? "" : "none" };
-
-  const toggleVisibility = () => {
-    setVisible(!visible);
-  };
 
   const onLike = () => {
     const newBlog = {
@@ -26,6 +15,31 @@ const Blog = ({ blog, user, handleLike, handleDelete }) => {
     };
     handleLike(newBlog);
     setLikes(likes + 1);
+  };
+
+  if (!blog) return null;
+
+  return (
+    <div>
+      <h2>
+        {blog.title} {blog.author}
+      </h2>
+      <div>{blog.url}</div>
+      <div>
+        {likes} likes <button onClick={onLike}>like</button>
+      </div>
+      <div>added by {blog.user.name}</div>
+    </div>
+  );
+};
+
+export const Blog = ({ blog, user, handleDelete }) => {
+  const blogStyle = {
+    paddingTop: 10,
+    paddingLeft: 2,
+    border: "solid",
+    borderWidth: 1,
+    marginBottom: 5,
   };
 
   const onDelete = () => {
@@ -37,20 +51,10 @@ const Blog = ({ blog, user, handleLike, handleDelete }) => {
   if (blog.user.username === user.username) {
     return (
       <div style={blogStyle} className="blog">
-        <div style={hideWhenVisible} className="hideWhenVisible">
-          {blog.title} {blog.author}{" "}
-          <button onClick={toggleVisibility}>view</button>
-        </div>
-        <div style={showWhenVisible} className="showWhenVisible">
-          <div>
-            {blog.title} {blog.author}{" "}
-            <button onClick={toggleVisibility}>hide</button>
-          </div>
-          <div>{blog.url}</div>
-          <div>
-            likes {likes} <button onClick={onLike}>like</button>
-          </div>
-          <div>{blog.user.name}</div>
+        <div>
+          <Link to={`/blogs/${blog.id}`}>
+            {blog.title} {blog.author}
+          </Link>{" "}
           <button onClick={onDelete}>remove</button>
         </div>
       </div>
@@ -58,21 +62,9 @@ const Blog = ({ blog, user, handleLike, handleDelete }) => {
   } else {
     return (
       <div style={blogStyle} className="blog">
-        <div style={hideWhenVisible} className="hideWhenVisible">
-          {blog.title} {blog.author}{" "}
-          <button onClick={toggleVisibility}>view</button>
-        </div>
-        <div style={showWhenVisible} className="showWhenVisible">
-          <div>
-            {blog.title} {blog.author}{" "}
-            <button onClick={toggleVisibility}>hide</button>
-          </div>
-          <div>{blog.url}</div>
-          <div>
-            likes {likes} <button onClick={onLike}>like</button>
-          </div>
-          <div>{blog.user.name}</div>
-        </div>
+        <Link to={`/blogs/${blog.id}`}>
+          {blog.title} {blog.author}
+        </Link>
       </div>
     );
   }
@@ -83,7 +75,4 @@ Blog.displayName = "Blog";
 Blog.propTypes = {
   blog: PropTypes.object.isRequired,
   user: PropTypes.object.isRequired,
-  //handleDelete: PropTypes.func.isRequired
 };
-
-export default Blog;
