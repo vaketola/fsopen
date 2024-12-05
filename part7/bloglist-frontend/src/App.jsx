@@ -2,14 +2,20 @@ import { useState, useEffect, useRef, useContext } from "react";
 import Blog from "./components/Blog";
 import BlogForm from "./components/BlogForm";
 import Togglable from "./components/Togglable";
-import UserInformation from "./components/UserInformation";
+import { UserInformation, IndividualUser } from "./components/UserInformation";
 import Notification from "./components/Notification";
 import NotificationContext from "./NotificationContext";
 import UserContext from "./UserContext";
 import loginService from "./services/login";
 import "./styles.css";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { getBlogs, createBlog, deleteBlog, updateBlog } from "./requests";
+import {
+  getBlogs,
+  createBlog,
+  deleteBlog,
+  updateBlog,
+  getUsers,
+} from "./requests";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 
 const App = () => {
@@ -26,6 +32,11 @@ const App = () => {
   const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ["blogs"],
     queryFn: getBlogs,
+  });
+
+  const { data: userData } = useQuery({
+    queryKey: ["users"],
+    queryFn: getUsers,
   });
 
   const deleteBlogMutation = useMutation({
@@ -178,8 +189,12 @@ const App = () => {
   return (
     <Router>
       <div>
-        <Link style={padding} to="/">blogs</Link>
-        <Link style={padding} to="/users">users</Link>
+        <Link style={padding} to="/">
+          blogs
+        </Link>
+        <Link style={padding} to="/users">
+          users
+        </Link>
       </div>
       <h2>blogs</h2>
       <Notification />
@@ -195,28 +210,35 @@ const App = () => {
       </button>
 
       <Routes>
-        <Route path="/" element={
-          <>
-            <Togglable buttonLabel="create new" ref={togglableFormRef}>
-              <BlogForm handleCreate={handleCreate} />
-            </Togglable>
-            <div>
-              {data
-                .slice()
-                .sort((x, y) => y.likes - x.likes)
-                .map((blog) => (
-                  <Blog
-                    key={blog.id}
-                    blog={blog}
-                    user={user}
-                    handleLike={handleLike}
-                    handleDelete={handleDelete}
-                  />
-                ))}
-            </div>
-          </>
-        } />
+        <Route
+          path="/"
+          element={
+            <>
+              <Togglable buttonLabel="create new" ref={togglableFormRef}>
+                <BlogForm handleCreate={handleCreate} />
+              </Togglable>
+              <div>
+                {data
+                  .slice()
+                  .sort((x, y) => y.likes - x.likes)
+                  .map((blog) => (
+                    <Blog
+                      key={blog.id}
+                      blog={blog}
+                      user={user}
+                      handleLike={handleLike}
+                      handleDelete={handleDelete}
+                    />
+                  ))}
+              </div>
+            </>
+          }
+        />
         <Route path="/users" element={<UserInformation />} />
+        <Route
+          path="/users/:id"
+          element={<IndividualUser users={userData} />}
+        />
       </Routes>
     </Router>
   );

@@ -1,7 +1,27 @@
 import { getUsers } from "../requests";
 import { useQuery } from "@tanstack/react-query";
+import { Link, useParams } from "react-router-dom";
 
-const UserInformation = () => {
+export const IndividualUser = ({ users }) => {
+  const id = useParams().id;
+  const user = users.find((u) => u.id === id);
+
+  if (!user) return null;
+
+  return (
+    <div>
+      <h2>{user.name}</h2>
+      <h3>added blogs</h3>
+      <ul>
+        {user.blogs.map((blog) => (
+          <li key={blog.id}>{blog.title}</li>
+        ))}
+      </ul>
+    </div>
+  );
+};
+
+export const UserInformation = () => {
   const result = useQuery({
     queryKey: ["users"],
     queryFn: getUsers,
@@ -28,7 +48,9 @@ const UserInformation = () => {
         <tbody>
           {users.map((user) => (
             <tr key={user.id}>
-              <td>{user.name}</td>
+              <td>
+                <Link to={`/users/${user.id}`}>{user.name}</Link>
+              </td>
               <td>{user.blogs.length}</td>
             </tr>
           ))}
@@ -37,5 +59,3 @@ const UserInformation = () => {
     </>
   );
 };
-
-export default UserInformation;
