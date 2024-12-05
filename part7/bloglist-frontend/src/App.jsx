@@ -7,6 +7,8 @@ import NotificationContext from "./NotificationContext";
 import blogService from "./services/blogs";
 import loginService from "./services/login";
 import "./styles.css";
+import { useQuery } from "@tanstack/react-query";
+import { getBlogs } from "./requests";
 
 const App = () => {
   const [user, setUser] = useState(null);
@@ -96,16 +98,24 @@ const App = () => {
   };
 
   useEffect(() => {
-    blogService.getAll().then((blogs) => setBlogs(blogs));
-  }, []);
-
-  useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem("loggedBlogAppUser");
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON);
       setUser(user);
     }
   }, []);
+
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["blogs"],
+    queryFn: getBlogs,
+  });
+
+  useEffect(() => {
+    if (data) setBlogs(data);
+  }, [data]);
+
+  if (isLoading) return <div>loading blogs...</div>;
+  if (isError) return <div>server error</div>;
 
   if (user === null) {
     return (
