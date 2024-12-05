@@ -1,4 +1,12 @@
 import { useState } from "react";
+import styled from "styled-components";
+
+const Button = styled.button`
+  background: LightGray;
+  border-radius: 10px;
+  margin: 0.1em;
+  padding: 0 0.5em;
+`;
 
 const BlogForm = ({ handleCreate }) => {
   const [title, setTitle] = useState("");
@@ -50,7 +58,7 @@ const BlogForm = ({ handleCreate }) => {
             onChange={({ target }) => setUrl(target.value)}
           />
         </div>
-        <button id="createButton">create</button>
+        <Button id="createButton">create</Button>
       </form>
     </>
   );

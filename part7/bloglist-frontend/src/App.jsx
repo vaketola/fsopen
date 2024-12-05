@@ -18,7 +18,20 @@ import {
   addComment,
 } from "./requests";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
-import { Table, Form, Button } from "react-bootstrap";
+import { Table, Form } from "react-bootstrap";
+import styled from "styled-components";
+
+const Button = styled.button`
+  background: LightGray;
+  border-radius: 10px;
+  margin: 0.25em;
+  padding: 0.25em 0.5em;
+`;
+const Button2 = styled.button`
+  background: White;
+  border-radius: 10px;
+  padding: 0.1em 0.25em;
+`;
 
 const App = () => {
   const [notification, notificationDispatch] = useContext(NotificationContext);
@@ -207,7 +220,7 @@ const App = () => {
             users
           </Link>
           {user.name} logged in{" "}
-          <button
+          <Button2
             onClick={() => {
               window.localStorage.removeItem("loggedBlogAppUser");
               window.localStorage.removeItem("loggedBlogAppUserToken");
@@ -215,7 +228,7 @@ const App = () => {
             }}
           >
             logout
-          </button>
+          </Button2>
         </div>
         <h2>blogs</h2>
 

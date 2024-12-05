@@ -1,6 +1,14 @@
 import { useState } from "react";
 import PropTypes from "prop-types";
 import { Link, useParams } from "react-router-dom";
+import styled from "styled-components";
+
+const Button = styled.button`
+  background: LightGray;
+  border-radius: 10px;
+  margin: 0.1em;
+  padding: 0 0.5em;
+`;
 
 export const IndividualBlog = ({ blogs, handleLike, handleComment }) => {
   const id = useParams().id;
@@ -36,7 +44,7 @@ export const IndividualBlog = ({ blogs, handleLike, handleComment }) => {
       </h2>
       <a href={blog.url}>{blog.url}</a>
       <div>
-        {likes} likes <button onClick={onLike}>like</button>
+        {likes} likes <Button onClick={onLike}>like</Button>
       </div>
       <div>added by {blog.user.name}</div>
       <h3>comments</h3>
@@ -46,7 +54,7 @@ export const IndividualBlog = ({ blogs, handleLike, handleComment }) => {
           value={comment}
           onChange={({ target }) => setComment(target.value)}
         />
-        <button id="add comment">add comment</button>
+        <Button id="add comment">add comment</Button>
       </form>
       <ul>
         {comments.map((comment, index) => (
@@ -70,7 +78,7 @@ export const Blog = ({ blog, user, handleDelete }) => {
         {blog.title} {blog.author}
       </Link>{" "}
       {blog.user.username === user.username ? (
-        <button onClick={onDelete}>remove</button>
+        <Button onClick={onDelete}>remove</Button>
       ) : null}
     </td>
   );
