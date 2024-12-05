@@ -2,11 +2,12 @@ import { useState } from "react";
 import PropTypes from "prop-types";
 import { Link, useParams } from "react-router-dom";
 
-export const IndividualBlog = ({ blogs, handleLike }) => {
+export const IndividualBlog = ({ blogs, handleLike, handleComment }) => {
   const id = useParams().id;
   const blog = blogs.find((b) => b.id === id);
 
   const [likes, setLikes] = useState(blog.likes);
+  const [comment, setComment] = useState("");
 
   const onLike = () => {
     const newBlog = {
@@ -15,6 +16,12 @@ export const IndividualBlog = ({ blogs, handleLike }) => {
     };
     handleLike(newBlog);
     setLikes(likes + 1);
+  };
+
+  const addComment = (event) => {
+    event.preventDefault();
+    handleComment(blog.id, comment);
+    setComment("");
   };
 
   if (!blog) return null;
@@ -29,6 +36,15 @@ export const IndividualBlog = ({ blogs, handleLike }) => {
         {likes} likes <button onClick={onLike}>like</button>
       </div>
       <div>added by {blog.user.name}</div>
+      <h3>comments</h3>
+      <form onSubmit={addComment}>
+        <input
+          type="text"
+          value={comment}
+          onChange={({ target }) => setComment(target.value)}
+        />
+        <button id="add comment">add comment</button>
+      </form>
     </div>
   );
 };

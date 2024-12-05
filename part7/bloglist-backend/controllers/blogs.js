@@ -32,6 +32,11 @@ blogsRouter.post("/", async (request, response) => {
   response.status(201).json(result);
 });
 
+blogsRouter.post("/:id/comments", async (request, response) => {
+  console.log(request.params)
+  response.status(201).json();
+});
+
 blogsRouter.delete("/:id", async (request, response) => {
   const user = request.user;
 

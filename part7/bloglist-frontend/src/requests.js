@@ -31,3 +31,9 @@ export const getUsers = () => {
   const request = axios.get("/api/users");
   return request.then((response) => response.data);
 };
+
+export const addComment = ({ blogId, comment }) => {
+  return axios
+    .post(`${baseUrl}/${blogId}/comments`, { comment })
+    .then((response) => response.data);
+};

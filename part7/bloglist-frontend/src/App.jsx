@@ -15,6 +15,7 @@ import {
   deleteBlog,
   updateBlog,
   getUsers,
+  addComment,
 } from "./requests";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 
@@ -54,6 +55,7 @@ const App = () => {
       refetch();
     },
   });
+  const addCommentMutation = useMutation({ mutationFn: addComment });
 
   const padding = { padding: 5 };
 
@@ -91,6 +93,14 @@ const App = () => {
       updateBlogMutation.mutate(blogObject);
     } catch (error) {
       console.error("Error updating likes:", error);
+    }
+  };
+
+  const handleComment = (blogId, comment) => {
+    try {
+      addCommentMutation.mutate({ blogId, comment });
+    } catch (error) {
+      console.error("Error adding comment:", error);
     }
   };
 
@@ -226,7 +236,6 @@ const App = () => {
                       key={blog.id}
                       blog={blog}
                       user={user}
-                      handleLike={handleLike}
                       handleDelete={handleDelete}
                     />
                   ))}
@@ -241,7 +250,13 @@ const App = () => {
         />
         <Route
           path="/blogs/:id"
-          element={<IndividualBlog blogs={data} handleLike={handleLike} />}
+          element={
+            <IndividualBlog
+              blogs={data}
+              handleLike={handleLike}
+              handleComment={handleComment}
+            />
+          }
         />
       </Routes>
     </Router>
