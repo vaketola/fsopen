@@ -33,8 +33,17 @@ blogsRouter.post("/", async (request, response) => {
 });
 
 blogsRouter.post("/:id/comments", async (request, response) => {
-  console.log(request.params)
-  response.status(201).json();
+  const { comment } = request.body;
+  if (!comment) return response.status(400).json({ error: "comment empty" });
+
+  const blog = await Blog.findById(request.params.id);
+  if (!blog) return response.status(404).json({ error: "blog not found" });
+
+  blog.comments = blog.comments || [];
+  blog.comments.push(comment);
+
+  const updatedBlog = await blog.save();
+  response.status(201).json(updatedBlog);
 });
 
 blogsRouter.delete("/:id", async (request, response) => {

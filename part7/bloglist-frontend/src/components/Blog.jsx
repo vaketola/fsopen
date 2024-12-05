@@ -9,6 +9,8 @@ export const IndividualBlog = ({ blogs, handleLike, handleComment }) => {
   const [likes, setLikes] = useState(blog.likes);
   const [comment, setComment] = useState("");
 
+  const [comments, setComments] = useState(blog.comments || []);
+
   const onLike = () => {
     const newBlog = {
       ...blog,
@@ -20,6 +22,7 @@ export const IndividualBlog = ({ blogs, handleLike, handleComment }) => {
 
   const addComment = (event) => {
     event.preventDefault();
+    setComments((state) => [...state, comment]);
     handleComment(blog.id, comment);
     setComment("");
   };
@@ -45,6 +48,11 @@ export const IndividualBlog = ({ blogs, handleLike, handleComment }) => {
         />
         <button id="add comment">add comment</button>
       </form>
+      <ul>
+        {comments.map((comment, index) => (
+          <li key={index}>{comment}</li>
+        ))}
+      </ul>
     </div>
   );
 };
