@@ -10,14 +10,14 @@ app.use(cors());
 
 const PORT = 3001;
 
-app.get('/api/ping', (_req, res) => {
-  console.log('someone pinged here');
+app.get('/api/ping', (_req, res): void => {
+  // console.log('someone pinged here');
   res.status(200).send(null);
 });
 
 app.use('/api/diagnoses', diagnosesRouter);
 app.use('/api/patients', patientsRouter);
 
-app.listen(PORT, () => {
+app.listen(PORT, (): void => {
   console.log(`Server running on port ${PORT}`);
 });
