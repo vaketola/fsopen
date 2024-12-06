@@ -41,7 +41,7 @@ const calculateExercises = ( hours: Array<number>, target: number ): ExerciseRes
 };
 
 try {
-  const { target, hours } = parseArguments(process.argv)
+  const { target, hours } = parseArguments(process.argv);
   console.log(calculateExercises(hours, target));
 } catch (error: unknown) {
   let errorMessage = 'Something went wrong.';

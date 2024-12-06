@@ -27,12 +27,12 @@ const calculateBmi = (height: number, weight: number): string => {
   if (bmi < 35)   return 'Obese (Class I)';
   if (bmi < 40)   return 'Obese (Class II)';
   if (bmi >= 40)  return 'Obese (Class III)';
-  return ''
+  return '';
 };
 
 if (require.main === module) {
   try {
-    const { height, weight } = parseArguments(process.argv)
+    const { height, weight } = parseArguments(process.argv);
     console.log(calculateBmi(height, weight));
   } catch (error: unknown) {
     let errorMessage = 'Something went wrong.';
