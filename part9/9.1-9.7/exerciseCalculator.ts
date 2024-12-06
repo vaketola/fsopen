@@ -16,7 +16,7 @@ const parseArguments = (args: string[]): CalculateExercises => {
   };
 };
 
-interface ExerciseResult {
+export interface ExerciseResult {
   periodLength: number;
   trainingDays: number;
   success: boolean;
@@ -26,7 +26,7 @@ interface ExerciseResult {
   average: number;
 };
 
-const calculateExercises = ( hours: Array<number>, target: number ): ExerciseResult => {
+export const calculateExercises = ( hours: Array<number>, target: number ): ExerciseResult => {
   const average: number = hours.reduce((a,b) => a+ b) / hours.length;
 
   return {
@@ -40,13 +40,13 @@ const calculateExercises = ( hours: Array<number>, target: number ): ExerciseRes
   };
 };
 
-try {
-  const { target, hours } = parseArguments(process.argv);
-  console.log(calculateExercises(hours, target));
-} catch (error: unknown) {
-  let errorMessage = 'Something went wrong.';
-  if (error instanceof Error) errorMessage += ' Error: ' + error.message;
-  console.log(errorMessage);
+if (require.main === module) {
+  try {
+    const { target, hours } = parseArguments(process.argv);
+    console.log(calculateExercises(hours, target));
+  } catch (error: unknown) {
+    let errorMessage = 'Something went wrong.';
+    if (error instanceof Error) errorMessage += ' Error: ' + error.message;
+    console.log(errorMessage);
+  };
 };
-
-export default calculateExercises;
