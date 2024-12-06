@@ -1,27 +1,28 @@
 import { NewPatient, Gender } from './types';
 
+const isString = (input: unknown): input is string => {
+  return typeof input === 'string' || input instanceof String; 
+};
+
 const parseString = (input: unknown, type: string): string => {
   // if (!input) throw new Error(`Missing ${type}`);
-  if (typeof input !== 'string') throw new Error(`Invalid ${type}`);
-
+  if (!isString(input)) throw new Error(`Invalid ${type}`);
   return input;
 };
 
 const parseDate = (input: unknown): string => {
   // if (!input) throw new Error ('Missing date')
-  if (typeof input !== 'string') throw new Error('Invalid date');
-  if (!Date.parse(input)) throw new Error('Invalid date');
-
+  if (!isString(input) || !Date.parse(input)) throw new Error('Invalid date');
   return input;
+};
+
+const isGender = (input: string): input is Gender => {
+  return Object.values(Gender).includes(input.toLowerCase() as Gender);
 };
 
 const parseGender = (input: unknown): Gender => {
   // if (!input) throw new Error ('Missing gender')
-  if (typeof input !== 'string') throw new Error('Invalid gender');
-  if (!Object.values(Gender).includes(input.toLowerCase() as Gender)) {
-    throw new Error('Invalid gender');
-  };
-  
+  if (!isString(input) || !isGender(input)) throw new Error('Invalid gender');
   return input.toLowerCase() as Gender;
 };
 
