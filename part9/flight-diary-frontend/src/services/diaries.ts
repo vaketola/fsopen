@@ -8,7 +8,17 @@ export const getAllDiaries = async (): Promise<Array<DiaryEntry>> => {
   return result.data;
 };
 
-export const createDiary = async (object: NewDiaryEntry) => {
-  const result = await axios.post<DiaryEntry>(baseUrl, object);
-  return result.data;
+export const createDiary = async (object: NewDiaryEntry): Promise<DiaryEntry> => {
+  try {
+    const result = await axios.post<DiaryEntry>(baseUrl, object);
+    return result.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      // console.log(error.status);
+      // console.error(error.response);
+      return Promise.reject(error.response);
+    };
+    // console.error(error);
+    return Promise.reject(error);
+  };
 };

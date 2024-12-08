@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { getAllDiaries, createDiary } from './services/diaries'
 import { DiaryEntry, NewDiaryEntry, Weather, Visibility } from './types';
+import { Alert, Container } from '@mui/material';
 
 const Diary = ({ diaries }: { diaries: Array<DiaryEntry> }): JSX.Element => {
   return (
@@ -18,17 +19,18 @@ const Diary = ({ diaries }: { diaries: Array<DiaryEntry> }): JSX.Element => {
 };
 
 const App = (): JSX.Element => {
-  const [diaries, setDiaries] = useState<Array<DiaryEntry>>([])
-  const [date, setDate] = useState<string>('')
-  const [weather, setWeather] = useState<string>('')
-  const [visibility, setVisibility] = useState<string>('')
-  const [comment, setComment] = useState<string>('')
+  const [diaries, setDiaries] = useState<Array<DiaryEntry>>([]);
+  const [date, setDate] = useState<string>('');
+  const [weather, setWeather] = useState<string>('');
+  const [visibility, setVisibility] = useState<string>('');
+  const [comment, setComment] = useState<string>('');
+  const [notification, setNotification] = useState<string>('');
 
   useEffect(() => {
     getAllDiaries().then((data: Array<DiaryEntry>): void => setDiaries(data));
   }, []);
 
-  const handleNewDiary = (event: React.SyntheticEvent) => {
+  const handleNewDiary = (event: React.SyntheticEvent): void => {
     event.preventDefault();
 
     const newDiaryEntry: NewDiaryEntry = {
@@ -44,12 +46,26 @@ const App = (): JSX.Element => {
       setWeather('');
       setVisibility('');
       setComment('');
+    })
+    .catch((error) => {
+      if (!error.data) {
+        return console.error('unexpected error:', error);
+      };
+      
+      setNotification(error.data);
+      setTimeout(() => setNotification(''), 3000);
     });
   };
 
   return (
-    <>
+    <Container>
       <h2>Add new entry</h2>
+      <div>
+        {(notification && 
+          <Alert severity="warning">
+            {notification}
+          </Alert>)}
+      </div>
       <form onSubmit={handleNewDiary}>
         <div>
           date:{' '}
@@ -72,7 +88,7 @@ const App = (): JSX.Element => {
 
       <h2>Diary entries</h2>
       <Diary diaries={diaries} />
-    </>
+    </Container>
   );
 };
 
