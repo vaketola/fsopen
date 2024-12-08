@@ -21,8 +21,8 @@ const Diary = ({ diaries }: { diaries: Array<DiaryEntry> }): JSX.Element => {
 const App = (): JSX.Element => {
   const [diaries, setDiaries] = useState<Array<DiaryEntry>>([]);
   const [date, setDate] = useState<string>('');
-  const [weather, setWeather] = useState<string>('');
-  const [visibility, setVisibility] = useState<string>('');
+  const [weather, setWeather] = useState<Weather>(Weather.Cloudy);
+  const [visibility, setVisibility] = useState<Visibility>(Visibility.Ok);
   const [comment, setComment] = useState<string>('');
   const [notification, setNotification] = useState<string>('');
 
@@ -33,18 +33,13 @@ const App = (): JSX.Element => {
   const handleNewDiary = (event: React.SyntheticEvent): void => {
     event.preventDefault();
 
-    const newDiaryEntry: NewDiaryEntry = {
-      date: date,
-      weather: weather as Weather,
-      visibility: visibility as Visibility,
-      comment: comment,
-    };
+    const newDiaryEntry: NewDiaryEntry = { date, weather, visibility, comment };
 
     createDiary(newDiaryEntry).then((result: DiaryEntry): void => {
       setDiaries(diaries.concat(result));
       setDate('');
-      setWeather('');
-      setVisibility('');
+      setWeather(Weather.Cloudy);
+      setVisibility(Visibility.Ok);
       setComment('');
     })
     .catch((error) => {
@@ -69,15 +64,35 @@ const App = (): JSX.Element => {
       <form onSubmit={handleNewDiary}>
         <div>
           date:{' '}
-          <input value={date} onChange={({target}) => setDate(target.value)} />
+          <input type='date' value={date} onChange={({target}) => setDate(target.value)} />
         </div>
         <div>
-          weather:{' '}
-          <input value={weather} onChange={({target}) => setWeather(target.value)} />
+          visibility:
+          {Object.keys(Visibility).map((key) => {
+            const enumValue = Visibility[key as keyof typeof Visibility];
+            return (
+              <>
+                <input key={key} type='radio' name='visibility' value={enumValue} 
+                  checked={visibility === enumValue} 
+                  onChange={({ target }) => setVisibility(target.value as Visibility)} 
+                /> {key}
+              </>
+            );
+          })}
         </div>
         <div>
-          visibility:{' '}
-          <input value={visibility} onChange={({target}) => setVisibility(target.value)} />
+          weather:
+          {Object.keys(Weather).map((key) => {
+            const enumValue = Weather[key as keyof typeof Weather];
+            return (
+              <>
+                <input key={key} type='radio' name='weather' value={enumValue} 
+                  checked={weather === enumValue} 
+                  onChange={({ target }) => setWeather(target.value as Weather)} 
+                /> {key}
+              </>
+            );
+          })}
         </div>
         <div>
           comment:{' '}
