@@ -9,6 +9,10 @@ patientsRouter.get('/', (_req, res): void => {
   res.status(200).send(patientService.getPatientsNonsensitive());
 });
 
+patientsRouter.get('/:id', (req, res): void => {
+  res.status(200).send(patientService.getPatient(req.params.id));
+});
+
 const newPersonParser = (req: Request, _res: Response, next: NextFunction) => { 
   try {
     NewPersonSchema.parse(req.body);
