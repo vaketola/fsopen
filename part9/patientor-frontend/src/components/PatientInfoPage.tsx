@@ -11,6 +11,12 @@ import {
 import { useEffect, useState } from "react";
 import { Box } from "@mui/material";
 
+const assertNever = (value: never): never => {
+  throw new Error(
+    `Unhandled discriminated union member: ${JSON.stringify(value)}`
+  );
+};
+
 const findDiagnosis = (code: string, diagnoses: Array<Diagnosis>): string => {
   const diagnosis: Diagnosis | undefined = diagnoses.find(diagnosis => diagnosis.code === code);
   if (diagnosis) return diagnosis.name;
@@ -100,7 +106,7 @@ const PatientHealthCheckEntry = ({ entry, diagnoses }: {
       heartColor = 'red';
       break;
     default: 
-      heartColor = 'black';
+      assertNever(entry.healthCheckRating);
       break;
   }
   
@@ -135,7 +141,7 @@ const PatientEntry = ({ entry, diagnoses }: {
       return <PatientHospitalEntry entry={entry} diagnoses={diagnoses} />;
     case "HealthCheck":
       return <PatientHealthCheckEntry entry={entry} diagnoses={diagnoses} />;
-    default: return <></>;
+    default: return assertNever(entry);
   }
 };
 
