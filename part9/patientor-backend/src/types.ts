@@ -64,7 +64,6 @@ export type HospitalEntry = z.infer<typeof HospitalEntrySchema>;
 export type HealthCheckEntry = z.infer<typeof HealthCheckEntrySchema>;
 
 export const EntrySchema = z.union([
-  // BaseEntrySchema,
   OccupationalHealthcareEntrySchema,
   HospitalEntrySchema,
   HealthCheckEntrySchema,
@@ -78,13 +77,23 @@ export const NewPatientSchema = z.object({
   ssn: z.string(),
   gender: z.nativeEnum(Gender),
   occupation: z.string(),
-  entries: z.array(EntrySchema),
 });
 
 export type NewPatient = z.infer<typeof NewPatientSchema>;
 
-export interface Patient extends NewPatient { id: string };
+export interface Patient extends NewPatient {
+  id: string, 
+  entries: Array<Entry>,
+};
 
 type UnionOmit<T, K extends string | number | symbol> = T extends unknown ? Omit<T, K> : never;
 
 export type PatientNonsensitive = UnionOmit<Patient, 'ssn'>; // | 'entries'>;
+
+export const NewEntrySchema = z.union([
+  OccupationalHealthcareEntrySchema.omit({ id: true }),
+  HospitalEntrySchema.omit({ id: true }),
+  HealthCheckEntrySchema.omit({ id: true }),
+]);
+
+export type NewEntry = z.infer<typeof NewEntrySchema>;
