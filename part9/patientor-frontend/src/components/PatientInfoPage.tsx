@@ -1,7 +1,6 @@
 import { useParams } from "react-router-dom";
 import {
-  BaseEntry, OccupationalHealthcareEntry,
-  HospitalEntry, Patient 
+  Entry, Patient, Diagnosis
 } from "../types";
 import patientService from "../services/patients";
 import { Male, Female } from '@mui/icons-material';
@@ -9,28 +8,31 @@ import { useEffect, useState } from "react";
 
 const Other = (): JSX.Element => <></>;
 
-// export interface BaseEntry {
-//   id: string;
-//   description: string;
-//   date: string;
-//   specialist: string;
-//   diagnosisCodes?: Array<Diagnosis['code']>;
-// }
+const findDiagnosis = (code: string, diagnoses: Array<Diagnosis>): string => {
+  const diagnosis: Diagnosis | undefined = diagnoses.find(diagnosis => diagnosis.code === code);
+  if (diagnosis) return diagnosis.name;
+  return '';
+};
 
-const Entry = ({ entry }: {
-  entry: BaseEntry | OccupationalHealthcareEntry | HospitalEntry
+const PatientEntry = ({ entry, diagnoses }: {
+  entry: Entry,
+  diagnoses: Array<Diagnosis>
  }): JSX.Element => {
   return (
     <>
       {entry.date} <i>{entry.description}</i>
       <ul>
-        {entry.diagnosisCodes?.map(code => <li key={code}>{code}</li>)}
+        {entry.diagnosisCodes?.map(code => 
+          <li key={code}>
+            {code} {findDiagnosis(code, diagnoses)}
+          </li>)
+        }
       </ul>
     </>
   );
 };
 
-const PatientInfoPage = (): JSX.Element => {
+const PatientInfoPage = ({ diagnoses }: { diagnoses: Array<Diagnosis> }): JSX.Element => {
   const [patient, setPatient] = useState<Patient | undefined>(undefined);
   
   const id: string | undefined = useParams().id;
@@ -57,7 +59,7 @@ const PatientInfoPage = (): JSX.Element => {
         <div>ssn: {patient.ssn}</div>
         <div>occupation: {patient.occupation}</div>
         <h2>entries</h2>
-        <div>{patient.entries.map(entry => <Entry key={entry.id} entry={entry} />)}</div>
+        <div>{patient.entries.map(entry => <PatientEntry key={entry.id} entry={entry} diagnoses={diagnoses} />)}</div>
       </div>
     );
   }

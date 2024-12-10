@@ -1,6 +1,6 @@
 import express from 'express';
 import patientService from '../services/patientService';
-import { Patient } from '../types';
+import { NewPatient, Patient, NewPatientSchema } from '../types';
 
 const patientsRouter = express.Router();
 
@@ -14,7 +14,8 @@ patientsRouter.get('/:id', (req, res): void => {
 
 patientsRouter.post('/', (req, res): void => {
   try {
-    const patient: Patient = patientService.addPatient(req.body);
+    const newPatient: NewPatient = NewPatientSchema.parse(req.body);
+    const patient: Patient = patientService.addPatient(newPatient);
     res.json(patient);
   } catch (error: unknown) {
     let errorMessage = 'Something went wrong.';
